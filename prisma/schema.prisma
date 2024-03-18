@@ -1,0 +1,183 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Major {
+  IPA
+  IPS
+  BAHASA
+}
+
+model Administrator {
+  id            String  @id @default(cuid())
+  email         String  @unique
+  name          String
+  password      String
+  profile_image String?
+  phone         String?
+
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  AdministratorSession AdministratorSession[]
+}
+
+model Teacher {
+  id            String  @id @default(cuid())
+  email         String  @unique
+  name          String
+  password      String
+  profile_image String?
+  phone         String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Class           Class[]
+  Subject         Subject[]
+  Material        Material[]
+  Assignment      Assignment[]
+  TeacherSesssion TeacherSesssion[]
+}
+
+model Student {
+  id            String  @id @default(cuid())
+  email         String  @unique
+  name          String
+  password      String
+  nip           String
+  profile_image String?
+  phone         String?
+  class_id      String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Class Class @relation(fields: [class_id], references: [id])
+
+  StudentAssigmentGrade StudentAssigmentGrade[]
+  StudentSession        StudentSession[]
+}
+
+model StudentAssigmentGrade {
+  id           String @id @default(cuid())
+  student_id   String
+  assigment_id String
+  grade        Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Student   Student    @relation(fields: [student_id], references: [id])
+  Assigment Assignment @relation(fields: [assigment_id], references: [id])
+}
+
+model Class {
+  id    String @id @default(cuid())
+  name  String @unique
+  major Major
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Student    Student[]
+  Teacher    Teacher[]
+  Subject    Subject[]
+  Material   Material[]
+  Assignment Assignment[]
+}
+
+model Subject {
+  id         String @id @default(cuid())
+  name       String
+  class_name String
+  teacher_id String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Class      Class        @relation(fields: [class_name], references: [name])
+  Teacher    Teacher      @relation(fields: [teacher_id], references: [id])
+  Material   Material[]
+  Assignment Assignment[]
+}
+
+model Material {
+  id         String @id @default(cuid())
+  title      String
+  content    String
+  class_name String
+  subject_id String
+  teacher_id String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Class   Class   @relation(fields: [class_name], references: [id])
+  Subject Subject @relation(fields: [subject_id], references: [id])
+  Teacher Teacher @relation(fields: [teacher_id], references: [id])
+}
+
+model Assignment {
+  id         String   @id @default(cuid())
+  title      String
+  content    String
+  deadline   DateTime
+  subject_id String
+  teacher_id String
+  class_name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Class                 Class                   @relation(fields: [class_name], references: [id])
+  Subject               Subject                 @relation(fields: [subject_id], references: [id])
+  Teacher               Teacher                 @relation(fields: [teacher_id], references: [id])
+  StudentAssigmentGrade StudentAssigmentGrade[]
+}
+
+model MediaFile {
+  id   String @id @default(cuid())
+  name String
+  url  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AdministratorSession {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  admin_id  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Administrator Administrator @relation(fields: [admin_id], references: [id])
+}
+
+model TeacherSesssion {
+  id         String   @id @default(cuid())
+  token      String   @unique
+  teacher_id String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  Teacher Teacher @relation(fields: [teacher_id], references: [id])
+}
+
+model StudentSession {
+  id         String   @id @default(cuid())
+  token      String   @unique
+  student_id String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  Student Student @relation(fields: [student_id], references: [id])
+}
