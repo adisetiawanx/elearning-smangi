@@ -116,9 +116,10 @@ model Material {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Class   Class   @relation(fields: [class_name], references: [id])
-  Subject Subject @relation(fields: [subject_id], references: [id])
-  Teacher Teacher @relation(fields: [teacher_id], references: [id])
+  MediaFile MediaFile[]
+  Class     Class       @relation(fields: [class_name], references: [id])
+  Subject   Subject     @relation(fields: [subject_id], references: [id])
+  Teacher   Teacher     @relation(fields: [teacher_id], references: [id])
 }
 
 model Assignment {
@@ -133,6 +134,7 @@ model Assignment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  MediaFile             MediaFile[]
   Class                 Class                   @relation(fields: [class_name], references: [id])
   Subject               Subject                 @relation(fields: [subject_id], references: [id])
   Teacher               Teacher                 @relation(fields: [teacher_id], references: [id])
@@ -146,4 +148,7 @@ model MediaFile {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  Material   Material[]
+  Assignment Assignment[]
 }
