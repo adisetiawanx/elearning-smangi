@@ -1,45 +1,24 @@
-import { addStudent } from "~/server/queries/student";
+import { addTeacherToClass } from "~/server/queries/class";
 
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
 
-    const email = body.email;
     const name = body.name;
-    const nis = body.nis;
-    const phone = body.phone;
-    const kelas = body.kelas;
-    const profile_url = body.profile_url;
-    const password = body.password;
+    const teacher_id = body.teacher_id;
 
-    if (
-      !email ||
-      !password ||
-      !name ||
-      !nis ||
-      !phone ||
-      !kelas ||
-      !profile_url
-    ) {
+    if (!name || !teacher_id) {
       throw new ErrorWithCode(400, "Please fill all the fields");
     }
 
-    const siswaDB = await addStudent({
-      email,
-      name,
-      nis,
-      phone,
-      kelas,
-      profile_url,
-      password,
+    await addTeacherToClass({
+      name: name,
+      teacherId: teacher_id,
     });
 
     return {
       msg: "Student added successfully",
-      data: {
-        siswa_email: siswaDB.email,
-        siswa_name: siswaDB.name,
-      },
+      data: {},
     };
   } catch (error) {
     if (error instanceof ErrorWithCode) {

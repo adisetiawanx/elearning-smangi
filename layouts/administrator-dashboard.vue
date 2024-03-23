@@ -87,35 +87,6 @@
                       {{ item.name }}
                     </NuxtLink>
                   </div>
-                  <div class="mt-8">
-                    <h3
-                      class="px-3 text-sm font-medium text-gray-500"
-                      id="mobile-teams-headline"
-                    >
-                      Data
-                    </h3>
-                    <div
-                      class="mt-1 space-y-1"
-                      role="group"
-                      aria-labelledby="mobile-teams-headline"
-                    >
-                      <NuxtLink
-                        v-for="team in teams"
-                        :key="team.name"
-                        :to="team.href"
-                        class="group flex items-center rounded-md px-3 py-2 text-base font-medium leading-5 text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                      >
-                        <span
-                          :class="[
-                            team.bgColorClass,
-                            'mr-4 h-2.5 w-2.5 rounded-full',
-                          ]"
-                          aria-hidden="true"
-                        />
-                        <span class="truncate">{{ team.name }}</span>
-                      </NuxtLink>
-                    </div>
-                  </div>
                 </nav>
               </div>
             </DialogPanel>
@@ -255,33 +226,6 @@
               {{ item.name }}
             </NuxtLink>
           </div>
-          <div class="mt-8">
-            <!-- Secondary navigation -->
-            <h3
-              class="px-3 text-sm font-medium text-gray-500"
-              id="desktop-teams-headline"
-            >
-              Data
-            </h3>
-            <div
-              class="mt-1 space-y-1"
-              role="group"
-              aria-labelledby="desktop-teams-headline"
-            >
-              <NuxtLink
-                v-for="team in teams"
-                :key="team.name"
-                :to="team.href"
-                class="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900"
-              >
-                <span
-                  :class="[team.bgColorClass, 'mr-4 h-2.5 w-2.5 rounded-full']"
-                  aria-hidden="true"
-                />
-                <span class="truncate">{{ team.name }}</span>
-              </NuxtLink>
-            </div>
-          </div>
         </nav>
       </div>
     </div>
@@ -394,7 +338,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import {
   Dialog,
   DialogPanel,
@@ -411,6 +355,10 @@ import {
   HomeIcon,
   XMarkIcon,
   AcademicCapIcon,
+  DocumentChartBarIcon,
+  BuildingLibraryIcon,
+  DocumentTextIcon,
+  ClipboardIcon,
 } from "@heroicons/vue/24/outline";
 import { ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 
@@ -438,12 +386,30 @@ const navigation = [
     icon: AcademicCapIcon,
     current: false,
   },
-];
-const teams = [
-  { name: "Tugas", href: "#", bgColorClass: "bg-indigo-500" },
-  { name: "Materi", href: "#", bgColorClass: "bg-green-500" },
-  { name: "Kelas", href: "#", bgColorClass: "bg-yellow-500" },
-  { name: "Mata Pelajaran", href: "#", bgColorClass: "bg-red-500" },
+  {
+    name: "Kelas",
+    href: `${administratorPath}/kelas`,
+    icon: BuildingLibraryIcon,
+    current: false,
+  },
+  {
+    name: "Mata Pelajaran",
+    href: `${administratorPath}/mata-pelajaran`,
+    icon: ClipboardIcon,
+    current: false,
+  },
+  {
+    name: "Materi",
+    href: `${administratorPath}/materi`,
+    icon: DocumentChartBarIcon,
+    current: false,
+  },
+  {
+    name: "Tugas",
+    href: `${administratorPath}/tugas`,
+    icon: DocumentTextIcon,
+    current: false,
+  },
 ];
 
 const sidebarOpen = ref(false);
@@ -452,9 +418,5 @@ watchEffect(() => {
   navigation.forEach((item) => {
     item.current = item.href === route.path;
   });
-});
-
-definePageMeta({
-  middleware: "is-administrator",
 });
 </script>

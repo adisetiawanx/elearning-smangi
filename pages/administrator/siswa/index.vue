@@ -2,7 +2,11 @@
   <NuxtLayout name="administrator-dashboard">
     <template #header>List Siswa</template>
     <template #content>
-      <AddSiswaModal :is-open="isOpen" @close="closeAddModal" />
+      <AddStudentModal
+        :is-open="isOpen"
+        :fetch-students-data="fetchStudentsData"
+        @close="closeAddModal"
+      />
       <button
         @click="isOpen = true"
         class="inline-flex items-center font-medium bg-green-500 text-white gap-1.5 mx-7 mt-5 py-1.5 px-4 shadow rounded hover:bg-green-600"
@@ -22,6 +26,7 @@
           />
         </div>
       </div>
+
       <!-- Siswa list -->
       <ul role="list" class="mx-7 border-x">
         <li
@@ -35,18 +40,18 @@
           <div
             class="group flex items-center justify-between px-4 py-3 hover:bg-gray-50 sm:px-6 text-sm"
           >
-            <span class="truncate font-medium">
+            <span class="flex-1 truncate font-medium">
               {{ student.name }}
             </span>
-            <span class="truncate">{{ student.room }}</span>
-            <EyeIcon
-              v-if="student.active"
-              class="w-6 bg-green-500 p-0.5 rounded shadow text-white"
-            />
-            <EyeSlashIcon
-              v-else
-              class="w-6 bg-red-500 p-0.5 rounded shadow text-white"
-            />
+            <span class="flex-initial truncate">{{ student.Class.name }}</span>
+            <NuxtLink
+              :to="`/administrator/siswa/${student.id}`"
+              class="flex-1 flex justify-end"
+            >
+              <Cog8ToothIcon
+                class="w-6 bg-green-500 p-0.5 rounded shadow text-white cursor-pointer"
+              />
+            </NuxtLink>
           </div>
         </li>
       </ul>
@@ -55,40 +60,33 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  EyeIcon,
-  EyeSlashIcon,
-  PlusCircleIcon,
-} from "@heroicons/vue/24/outline";
+import { Cog8ToothIcon, PlusCircleIcon } from "@heroicons/vue/24/outline";
 
 const isOpen = ref(false);
+
+const { getStudentsData } = useStudent();
 
 function closeAddModal() {
   isOpen.value = false;
 }
 
-const students = ref([
-  {
-    id: 1,
-    name: "Adi Setiawan",
-    room: "12 MIPA 3",
-    active: true,
-  },
+const students = ref<any>([]);
 
-  {
-    id: 1,
-    name: "Adi Setiawan",
-    room: "12 MIPA 3",
-    active: true,
-  },
+const querySiswa = ref({
+  take: 20,
+  skip: 0,
+});
 
-  {
-    id: 1,
-    name: "Adi Setiawan",
-    room: "12 MIPA 3",
-    active: false,
-  },
-]);
+const fetchStudentsData = async () => {
+  students.value = await getStudentsData({
+    take: querySiswa.value.take,
+    skip: querySiswa.value.skip,
+  });
+};
+
+onMounted(async () => {
+  await fetchStudentsData();
+});
 
 definePageMeta({
   middleware: "is-administrator",

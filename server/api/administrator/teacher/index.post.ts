@@ -1,4 +1,4 @@
-import { addStudent } from "~/server/queries/student";
+import { addTeacher } from "~/server/queries/teacher";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -6,30 +6,20 @@ export default defineEventHandler(async (event) => {
 
     const email = body.email;
     const name = body.name;
-    const nis = body.nis;
+    const nuptk = body.nuptk;
     const phone = body.phone;
-    const kelas = body.kelas;
     const profile_url = body.profile_url;
     const password = body.password;
 
-    if (
-      !email ||
-      !password ||
-      !name ||
-      !nis ||
-      !phone ||
-      !kelas ||
-      !profile_url
-    ) {
+    if (!email || !password || !name || !nuptk || !phone || !profile_url) {
       throw new ErrorWithCode(400, "Please fill all the fields");
     }
 
-    const siswaDB = await addStudent({
+    const teacherDB = await addTeacher({
       email,
       name,
-      nis,
+      nuptk,
       phone,
-      kelas,
       profile_url,
       password,
     });
@@ -37,8 +27,8 @@ export default defineEventHandler(async (event) => {
     return {
       msg: "Student added successfully",
       data: {
-        siswa_email: siswaDB.email,
-        siswa_name: siswaDB.name,
+        teacher_email: teacherDB.email,
+        teacher_name: teacherDB.name,
       },
     };
   } catch (error) {

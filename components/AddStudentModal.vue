@@ -38,7 +38,7 @@
                 <input
                   type="email"
                   id="email"
-                  v-model="siswa.email"
+                  v-model="student.email"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
@@ -57,7 +57,7 @@
                 <input
                   type="text"
                   id="password"
-                  v-model="siswa.password"
+                  v-model="student.password"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
@@ -70,18 +70,18 @@
                 <input
                   type="text"
                   id="name"
-                  v-model="siswa.name"
+                  v-model="student.name"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
               <div class="mb-4">
-                <label for="nip" class="block text-sm font-medium text-gray-700"
+                <label for="nis" class="block text-sm font-medium text-gray-700"
                   >No. Induk Siswa</label
                 >
                 <input
                   type="text"
-                  id="nip"
-                  v-model="siswa.nip"
+                  id="nis"
+                  v-model="student.nis"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
@@ -94,7 +94,7 @@
                 <input
                   type="text"
                   id="phone"
-                  v-model="siswa.phone"
+                  v-model="student.phone"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
@@ -106,13 +106,17 @@
                 >
                 <select
                   id="kelas"
-                  v-model="siswa.kelas"
+                  v-model="student.kelas"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 >
                   <option value="">Pilih Kelas</option>
-                  <option value="Kelas 1">Kelas 1</option>
-                  <option value="Kelas 2">Kelas 2</option>
-                  <option value="Kelas 3">Kelas 3</option>
+                  <option
+                    v-for="(kelas, kelasIndex) in listKelas"
+                    :key="kelasIndex"
+                    :value="kelas.name"
+                  >
+                    {{ kelas.name }}
+                  </option>
                   <!-- Add more options as needed -->
                 </select>
               </div>
@@ -130,10 +134,13 @@
                   class="mt-1 text-sm"
                 />
               </div>
-              <div v-if="siswa.profileUrl" class="mb-4">
+
+              <div class="mb-4">
+                <Spinner v-if="isUploadProfilePicture" />
                 <NuxtImg
-                  :src="siswa.profileUrl"
-                  width="400"
+                  v-else-if="student.profileUrl && !isUploadProfilePicture"
+                  :src="student.profileUrl"
+                  width="300"
                   layout="fixed"
                   class="rounded shadow-sm"
                 />
@@ -146,8 +153,9 @@
                   Batal
                 </button>
                 <button
+                  :disabled="isUploadProfilePicture"
                   type="submit"
-                  class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:cursor-not-allowed"
                 >
                   Add Siswa
                 </button>
@@ -163,17 +171,26 @@
 <script lang="ts" setup>
 const props = defineProps({
   isOpen: Boolean,
+  fetchStudentsData: {
+    type: Function as PropType<() => Promise<void>>,
+    required: true,
+  },
 });
 
-const siswa = ref({
+const { getListKelas } = useKelas();
+
+const student = ref({
   email: "",
   name: "",
   password: "",
-  nip: "",
+  nis: "",
   phone: "",
   kelas: "",
   profileUrl: null as string | null,
 });
+
+const listKelas = ref<any>([]);
+const isUploadProfilePicture = ref(false);
 
 const closeModal = () => {
   emit("close");
@@ -183,21 +200,19 @@ const emit = defineEmits(["close"]);
 
 const generateRandomPassword = () => {
   const randomPassword = Math.random().toString(36).slice(-8);
-  siswa.value.password = randomPassword;
+  student.value.password = randomPassword;
 };
 
 const uploadProfilePicture = async (event: Event) => {
+  isUploadProfilePicture.value = true;
   const formData = new FormData();
   //@ts-expect-error
   formData.append("file", event.target.files[0]);
 
-  const { data: respone, error } = await useFetch(
-    "/api/administrator/student/profile",
-    {
-      method: "POST",
-      body: formData,
-    }
-  );
+  const { data: respone, error } = await useFetch("/api/administrator/image", {
+    method: "POST",
+    body: formData,
+  });
 
   if (error.value) {
     console.error(error.value);
@@ -206,37 +221,53 @@ const uploadProfilePicture = async (event: Event) => {
 
   if (respone.value) {
     //@ts-expect-error
-    siswa.value.profileUrl = respone.value.data?.url;
+    student.value.profileUrl = respone.value.data?.url;
   }
+
+  isUploadProfilePicture.value = false;
 };
 
 const addSiswa = async () => {
   if (
-    !siswa.value.email ||
-    !siswa.value.password ||
-    !siswa.value.name ||
-    !siswa.value.nip ||
-    !siswa.value.phone ||
-    !siswa.value.kelas ||
-    !siswa.value.profileUrl
+    !student.value.email ||
+    !student.value.password ||
+    !student.value.name ||
+    !student.value.nis ||
+    !student.value.phone ||
+    !student.value.kelas ||
+    !student.value.profileUrl
   ) {
     alert("Tolong isi semua field!");
     return;
   }
 
-  await useFetch("/api/administrator/student", {
+  const { error } = await useFetch("/api/administrator/student", {
     method: "POST",
     body: {
-      email: siswa.value.email,
-      name: siswa.value.name,
-      nip: siswa.value.nip,
-      phone: siswa.value.phone,
-      kelas: siswa.value.kelas,
-      profile_url: siswa.value.profileUrl,
+      email: student.value.email,
+      password: student.value.password,
+      name: student.value.name,
+      nis: student.value.nis,
+      phone: student.value.phone,
+      kelas: student.value.kelas,
+      profile_url: student.value.profileUrl,
     },
   });
 
+  if (error.value) {
+    alert(error.value.message);
+    return;
+  }
+
   alert("Siswa berhasil ditambahkan!");
+  await props.fetchStudentsData();
   closeModal();
 };
+
+onMounted(async () => {
+  listKelas.value = await getListKelas({
+    take: undefined,
+    skip: 0,
+  });
+});
 </script>

@@ -24,9 +24,8 @@ model Administrator {
   profile_image String?
   phone         String?
 
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime               @updatedAt
-  AdministratorSession AdministratorSession[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Teacher {
@@ -34,17 +33,17 @@ model Teacher {
   email         String  @unique
   name          String
   password      String
+  nuptk         String
   profile_image String?
   phone         String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Class           Class[]
-  Subject         Subject[]
-  Material        Material[]
-  Assignment      Assignment[]
-  TeacherSesssion TeacherSesssion[]
+  Class      Class[]
+  Subject    Subject[]
+  Material   Material[]
+  Assignment Assignment[]
 }
 
 model Student {
@@ -52,7 +51,7 @@ model Student {
   email         String  @unique
   name          String
   password      String
-  nip           String
+  nis           String
   profile_image String?
   phone         String?
   class_id      String
@@ -63,7 +62,6 @@ model Student {
   Class Class @relation(fields: [class_id], references: [id])
 
   StudentAssigmentGrade StudentAssigmentGrade[]
-  StudentSession        StudentSession[]
 }
 
 model StudentAssigmentGrade {
@@ -95,16 +93,14 @@ model Class {
 }
 
 model Subject {
-  id         String @id @default(cuid())
-  name       String
-  class_name String
-  teacher_id String
+  id   String @id @default(cuid())
+  name String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Class      Class        @relation(fields: [class_name], references: [name])
-  Teacher    Teacher      @relation(fields: [teacher_id], references: [id])
+  Class      Class[]
+  Teacher    Teacher[]
   Material   Material[]
   Assignment Assignment[]
 }
@@ -150,34 +146,4 @@ model MediaFile {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model AdministratorSession {
-  id        String   @id @default(cuid())
-  token     String   @unique
-  admin_id  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  Administrator Administrator @relation(fields: [admin_id], references: [id])
-}
-
-model TeacherSesssion {
-  id         String   @id @default(cuid())
-  token      String   @unique
-  teacher_id String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  Teacher Teacher @relation(fields: [teacher_id], references: [id])
-}
-
-model StudentSession {
-  id         String   @id @default(cuid())
-  token      String   @unique
-  student_id String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  Student Student @relation(fields: [student_id], references: [id])
 }

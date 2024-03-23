@@ -95,7 +95,7 @@ const loginHandler = async () => {
     );
   } catch (error) {
     if (error instanceof Error) {
-      loginStatus.value.error = error.message;
+      alert(error.message);
     }
   } finally {
     loginStatus.value.isLoading = false;

@@ -24,7 +24,7 @@
           <!-- The actual dialog panel -->
           <HeadlessDialogPanel class="w-full max-w-5xl rounded bg-white p-5">
             <HeadlessDialogTitle class="border-b pb-3 font-medium text-lg"
-              >Tambahkan Siswa Baru</HeadlessDialogTitle
+              >Tambahkan Guru Baru</HeadlessDialogTitle
             >
 
             <!-- Form for adding Siswa -->
@@ -38,7 +38,26 @@
                 <input
                   type="email"
                   id="email"
-                  v-model="teacherInput.email"
+                  v-model="teacher.email"
+                  class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                />
+              </div>
+              <div class="mb-4">
+                <label
+                  for="password"
+                  class="block text-sm font-medium text-gray-700"
+                  >Password
+                  <span
+                    @click="generateRandomPassword"
+                    class="ml-1 underline text-blue-500 text-xs font-light cursor-pointer hover:text-blue-600 select-none"
+                    draggable="false"
+                    >Generate</span
+                  ></label
+                >
+                <input
+                  type="text"
+                  id="password"
+                  v-model="teacher.password"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
@@ -51,18 +70,18 @@
                 <input
                   type="text"
                   id="name"
-                  v-model="teacherInput.name"
+                  v-model="teacher.name"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
               <div class="mb-4">
                 <label for="nip" class="block text-sm font-medium text-gray-700"
-                  >No. Induk Siswa</label
+                  >No. Unik Pendidik dan Tenaga Kependidikan</label
                 >
                 <input
                   type="text"
                   id="nip"
-                  v-model="teacherInput.nip"
+                  v-model="teacher.nuptk"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
@@ -75,28 +94,11 @@
                 <input
                   type="text"
                   id="phone"
-                  v-model="teacherInput.phone"
+                  v-model="teacher.phone"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
-              <div class="mb-4">
-                <label
-                  for="kelas"
-                  class="block text-sm font-medium text-gray-700"
-                  >Kelas</label
-                >
-                <select
-                  id="kelas"
-                  v-model="teacherInput.kelas"
-                  class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                >
-                  <option value="">Pilih Kelas</option>
-                  <option value="Kelas 1">Kelas 1</option>
-                  <option value="Kelas 2">Kelas 2</option>
-                  <option value="Kelas 3">Kelas 3</option>
-                  <!-- Add more options as needed -->
-                </select>
-              </div>
+
               <div class="mb-4">
                 <label
                   for="foto"
@@ -106,12 +108,23 @@
                 <input
                   type="file"
                   id="foto"
-                  @change="uploadProfileTeacher"
+                  @change="uploadProfilePicture"
                   accept="image/*"
                   class="mt-1 text-sm"
                 />
               </div>
-              <div class="flex justify-end gap-3">
+
+              <div class="mb-4">
+                <Spinner v-if="isUploadProfilePicture" />
+                <NuxtImg
+                  v-else-if="teacher.profileUrl && !isUploadProfilePicture"
+                  :src="teacher.profileUrl"
+                  width="300"
+                  layout="fixed"
+                  class="rounded shadow-sm"
+                />
+              </div>
+              <div class="flex justify-end gap-3 mt-5 border-t pt-3">
                 <button
                   @click="closeModal"
                   class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -119,10 +132,11 @@
                   Batal
                 </button>
                 <button
+                  :disabled="isUploadProfilePicture"
                   type="submit"
-                  class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:cursor-not-allowed"
                 >
-                  Add Guru
+                  Add Siswa
                 </button>
               </div>
             </form>
@@ -136,16 +150,22 @@
 <script lang="ts" setup>
 const props = defineProps({
   isOpen: Boolean,
+  fetchTeachersData: {
+    type: Function as PropType<() => Promise<void>>,
+    required: true,
+  },
 });
 
-const teacherInput = ref({
+const teacher = ref({
   email: "",
   name: "",
-  nip: "",
+  password: "",
+  nuptk: "",
   phone: "",
-  kelas: "",
-  foto: null,
+  profileUrl: null as string | null,
 });
+
+const isUploadProfilePicture = ref(false);
 
 const closeModal = () => {
   emit("close");
@@ -153,15 +173,67 @@ const closeModal = () => {
 
 const emit = defineEmits(["close"]);
 
-const uploadProfileTeacher = (event: any) => {
-  const file = event.target.files[0];
-  if (file) {
-    teacherInput.value.foto = file;
-  }
+const generateRandomPassword = () => {
+  const randomPassword = Math.random().toString(36).slice(-8);
+  teacher.value.password = randomPassword;
 };
 
-const addSiswa = () => {
-  // Add your logic to handle adding the Siswa here
-  // You can access the form data using the `siswa` ref
+const uploadProfilePicture = async (event: Event) => {
+  isUploadProfilePicture.value = true;
+  const formData = new FormData();
+  //@ts-expect-error
+  formData.append("file", event.target.files[0]);
+
+  const { data: respone, error } = await useFetch("/api/administrator/image", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (error.value) {
+    console.error(error.value);
+    return;
+  }
+
+  if (respone.value) {
+    //@ts-expect-error
+    teacher.value.profileUrl = respone.value.data?.url;
+  }
+
+  isUploadProfilePicture.value = false;
+};
+
+const addSiswa = async () => {
+  if (
+    !teacher.value.email ||
+    !teacher.value.password ||
+    !teacher.value.name ||
+    !teacher.value.nuptk ||
+    !teacher.value.phone ||
+    !teacher.value.profileUrl
+  ) {
+    alert("Tolong isi semua field!");
+    return;
+  }
+
+  const { error } = await useFetch("/api/administrator/teacher", {
+    method: "POST",
+    body: {
+      email: teacher.value.email,
+      name: teacher.value.name,
+      nuptk: teacher.value.nuptk,
+      phone: teacher.value.phone,
+      profile_url: teacher.value.profileUrl,
+      password: teacher.value.password,
+    },
+  });
+
+  if (error.value) {
+    alert(error.value.message);
+    return;
+  }
+
+  alert("Siswa berhasil ditambahkan!");
+  await props.fetchTeachersData();
+  closeModal();
 };
 </script>
