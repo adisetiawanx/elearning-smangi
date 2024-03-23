@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout name="administrator-dashboard">
-    <template #header>List Siswa</template>
+    <template #header>List Guru</template>
     <template #content>
       <AddTeacherModal
         :fetch-teachers-data="fetchTeachersData"
@@ -26,13 +26,14 @@
           />
         </div>
       </div>
+
       <!-- Guru list -->
-      <ul role="list" class="mx-7 border-x">
+      <ul v-if="teachersArr.length > 0" role="list" class="mx-7 border-x">
         <li
-          v-for="(teacher, teacherIndex) in teachers"
+          v-for="(teacher, teacherIndex) in teachersArr"
           :key="teacher.id"
           :class="[
-            teacherIndex + 1 == teachers.length ? 'border-b' : '',
+            teacherIndex + 1 == teachersArr.length ? 'border-b' : '',
             'border-t',
           ]"
         >
@@ -56,12 +57,54 @@
           </div>
         </li>
       </ul>
+      <p v-else class="mx-7 text-gray-500 text-sm">
+        Tidak ada guru yang tersedia.
+      </p>
+
+      <!-- Pagination -->
+      <div class="flex justify-between items-center mt-5 mx-7">
+        <div>
+          <button
+            :disabled="queryTeacher.skip === 0"
+            @click="
+              queryTeacher.skip -= queryTeacher.take;
+              fetchTeachersData();
+            "
+            class="inline-flex items-center font-medium border text-gray-500 text-sm gap-1.5 py-1 px-2.5 shadow rounded hover:bg-gray-100 disabled:cursor-not-allowed"
+          >
+            <ArrowLeftIcon class="w-5" />
+            <span>Previous</span>
+          </button>
+        </div>
+        <span class="mr-2 font-medium text-sm text-gray-500"
+          >Page
+          {{ Math.floor(queryTeacher.skip / queryTeacher.take) + 1 }}</span
+        >
+        <div>
+          <button
+            :disabled="teachersArr.length < queryTeacher.take"
+            @click="
+              queryTeacher.skip += queryTeacher.take;
+              fetchTeachersData();
+            "
+            class="inline-flex items-center font-medium border text-gray-500 text-sm gap-1.5 py-1 px-2.5 shadow rounded hover:bg-gray-100 disabled:cursor-not-allowed"
+          >
+            <span>Next</span>
+            <ArrowRightIcon class="w-5" />
+          </button>
+        </div>
+      </div>
     </template>
   </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
-import { Cog8ToothIcon, PlusCircleIcon } from "@heroicons/vue/24/outline";
+import {
+  Cog8ToothIcon,
+  PlusCircleIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+} from "@heroicons/vue/24/outline";
 
 const isOpen = ref(false);
 const { getTeachersData } = useTeacher();
@@ -70,12 +113,20 @@ const closeAddModal = () => {
   isOpen.value = false;
 };
 
-const teachers = ref<any>([]);
+const route = useRoute();
+const page = route.query.page ? Number(route.query.page) : 1;
+
+const teachersArr = ref<any>([]);
+
+const queryTeacher = ref({
+  take: 20,
+  skip: (page - 1) * 20,
+});
 
 const fetchTeachersData = async () => {
-  teachers.value = await getTeachersData({
-    take: 20,
-    skip: 0,
+  teachersArr.value = await getTeachersData({
+    take: queryTeacher.value.take,
+    skip: queryTeacher.value.skip,
   });
 };
 

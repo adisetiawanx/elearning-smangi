@@ -15,7 +15,7 @@
         </div>
       </div>
 
-      <ul role="list" class="mx-7 border-x">
+      <ul v-if="assignmentArr.length > 0" role="list" class="mx-7 border-x">
         <li
           v-for="(assignment, assignmentIndex) in assignmentArr"
           :key="assignmentIndex"
@@ -43,27 +43,78 @@
           </div>
         </li>
       </ul>
+      <p v-else class="mx-7 text-gray-500 text-sm">
+        Tidak ada tugas yang tersedia.
+      </p>
+
+      <!-- Pagination -->
+      <div class="flex justify-between items-center mt-5 mx-7">
+        <div>
+          <button
+            :disabled="queryAssignment.skip === 0"
+            @click="
+              queryAssignment.skip -= queryAssignment.take;
+              fetchAssignmentData();
+            "
+            class="inline-flex items-center font-medium border text-gray-500 text-sm gap-1.5 py-1 px-2.5 shadow rounded hover:bg-gray-100 disabled:cursor-not-allowed"
+          >
+            <ArrowLeftIcon class="w-5" />
+            <span>Previous</span>
+          </button>
+        </div>
+        <span class="mr-2 font-medium text-sm text-gray-500"
+          >Page
+          {{
+            Math.floor(queryAssignment.skip / queryAssignment.take) + 1
+          }}</span
+        >
+        <div>
+          <button
+            :disabled="assignmentArr.length < queryAssignment.take"
+            @click="
+              queryAssignment.skip += queryAssignment.take;
+              fetchAssignmentData();
+            "
+            class="inline-flex items-center font-medium border text-gray-500 text-sm gap-1.5 py-1 px-2.5 shadow rounded hover:bg-gray-100 disabled:cursor-not-allowed"
+          >
+            <span>Next</span>
+            <ArrowRightIcon class="w-5" />
+          </button>
+        </div>
+      </div>
     </template>
   </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
-import { Cog8ToothIcon } from "@heroicons/vue/24/outline";
+import {
+  Cog8ToothIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+} from "@heroicons/vue/24/outline";
 
 const { getListAssignment } = useAssignment();
 
+const route = useRoute();
+const page = route.query.page ? Number(route.query.page) : 1;
+
 const assignmentArr = ref<any>([]);
 
-const fetchKelasList = async () => {
+const queryAssignment = ref({
+  take: 20,
+  skip: (page - 1) * 20,
+});
+
+const fetchAssignmentData = async () => {
   const assignments = await getListAssignment({
-    take: 20,
-    skip: 0,
+    take: queryAssignment.value.take,
+    skip: queryAssignment.value.skip,
   });
   assignmentArr.value = assignments;
 };
 
 onMounted(async () => {
-  await fetchKelasList();
+  await fetchAssignmentData();
 });
 
 definePageMeta({

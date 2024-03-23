@@ -28,12 +28,12 @@
       </div>
 
       <!-- Siswa list -->
-      <ul role="list" class="mx-7 border-x">
+      <ul v-if="studentArr.length > 0" role="list" class="mx-7 border-x">
         <li
-          v-for="(student, studentIndex) in students"
+          v-for="(student, studentIndex) in studentArr"
           :key="student.id"
           :class="[
-            studentIndex + 1 == students.length ? 'border-b' : '',
+            studentIndex + 1 == studentArr.length ? 'border-b' : '',
             'border-t',
           ]"
         >
@@ -55,12 +55,54 @@
           </div>
         </li>
       </ul>
+      <p v-else class="mx-7 text-gray-500 text-sm">
+        Tidak ada siswa yang tersedia.
+      </p>
+
+      <!-- Pagination -->
+      <div class="flex justify-between items-center mt-5 mx-7">
+        <div>
+          <button
+            :disabled="queryStudent.skip === 0"
+            @click="
+              queryStudent.skip -= queryStudent.take;
+              fetchStudentsData();
+            "
+            class="inline-flex items-center font-medium border text-gray-500 text-sm gap-1.5 py-1 px-2.5 shadow rounded hover:bg-gray-100 disabled:cursor-not-allowed"
+          >
+            <ArrowLeftIcon class="w-5" />
+            <span>Previous</span>
+          </button>
+        </div>
+        <span class="mr-2 font-medium text-sm text-gray-500"
+          >Page
+          {{ Math.floor(queryStudent.skip / queryStudent.take) + 1 }}</span
+        >
+        <div>
+          <button
+            :disabled="studentArr.length < queryStudent.take"
+            @click="
+              queryStudent.skip += queryStudent.take;
+              fetchStudentsData();
+            "
+            class="inline-flex items-center font-medium border text-gray-500 text-sm gap-1.5 py-1 px-2.5 shadow rounded hover:bg-gray-100 disabled:cursor-not-allowed"
+          >
+            <span>Next</span>
+            <ArrowRightIcon class="w-5" />
+          </button>
+        </div>
+      </div>
     </template>
   </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
-import { Cog8ToothIcon, PlusCircleIcon } from "@heroicons/vue/24/outline";
+import {
+  Cog8ToothIcon,
+  PlusCircleIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+} from "@heroicons/vue/24/outline";
 
 const isOpen = ref(false);
 
@@ -70,17 +112,20 @@ function closeAddModal() {
   isOpen.value = false;
 }
 
-const students = ref<any>([]);
+const studentArr = ref<any>([]);
 
-const querySiswa = ref({
+const route = useRoute();
+const page = route.query.page ? Number(route.query.page) : 1;
+
+const queryStudent = ref({
   take: 20,
-  skip: 0,
+  skip: (page - 1) * 20,
 });
 
 const fetchStudentsData = async () => {
-  students.value = await getStudentsData({
-    take: querySiswa.value.take,
-    skip: querySiswa.value.skip,
+  studentArr.value = await getStudentsData({
+    take: queryStudent.value.take,
+    skip: queryStudent.value.skip,
   });
 };
 

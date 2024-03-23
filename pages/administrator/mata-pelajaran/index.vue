@@ -27,7 +27,7 @@
         </div>
       </div>
 
-      <ul role="list" class="mx-7 border-x">
+      <ul v-if="subjectArr.length > 0" role="list" class="mx-7 border-x">
         <li
           v-for="(subject, subjectIndex) in subjectArr"
           :key="subjectIndex"
@@ -56,12 +56,57 @@
           </div>
         </li>
       </ul>
+      <p v-else class="mx-7 text-gray-500 text-sm">
+        Tidak ada mata pelajaran yang tersedia.
+      </p>
+
+      <!-- Pagination -->
+      <div class="flex justify-between items-center mt-5 mx-7">
+        <div>
+          <button
+            :disabled="querySubject.skip === 0"
+            @click="
+              querySubject.skip -= querySubject.take;
+              fetchSubjectList();
+            "
+            class="inline-flex items-center font-medium border text-gray-500 text-sm gap-1.5 py-1 px-2.5 shadow rounded hover:bg-gray-100 disabled:cursor-not-allowed"
+          >
+            <ArrowLeftIcon class="w-5" />
+            <span>Previous</span>
+          </button>
+        </div>
+        <span class="mr-2 font-medium text-sm text-gray-500"
+          >Page
+          {{ Math.floor(querySubject.skip / querySubject.take) + 1 }}</span
+        >
+        <div>
+          <button
+            :disabled="subjectArr.length < querySubject.take"
+            @click="
+              querySubject.skip += querySubject.take;
+              fetchSubjectList();
+            "
+            class="inline-flex items-center font-medium border text-gray-500 text-sm gap-1.5 py-1 px-2.5 shadow rounded hover:bg-gray-100 disabled:cursor-not-allowed"
+          >
+            <span>Next</span>
+            <ArrowRightIcon class="w-5" />
+          </button>
+        </div>
+      </div>
     </template>
   </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
-import { PlusCircleIcon, Cog8ToothIcon } from "@heroicons/vue/24/outline";
+import {
+  PlusCircleIcon,
+  Cog8ToothIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+} from "@heroicons/vue/24/outline";
+
+const route = useRoute();
+const page = route.query.page ? Number(route.query.page) : 1;
 
 const isOpen = ref(false);
 const { getListSubjects } = useSubject();
@@ -72,10 +117,15 @@ function closeAddModal() {
 
 const subjectArr = ref<any>([]);
 
+const querySubject = ref({
+  take: 20,
+  skip: (page - 1) * 20,
+});
+
 const fetchSubjectList = async () => {
   const subjects = await getListSubjects({
-    take: 20,
-    skip: 0,
+    take: querySubject.value.take,
+    skip: querySubject.value.skip,
   });
   subjectArr.value = subjects;
 };

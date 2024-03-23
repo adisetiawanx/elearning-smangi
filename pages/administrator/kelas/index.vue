@@ -27,7 +27,7 @@
         </div>
       </div>
 
-      <ul role="list" class="mx-7 border-x">
+      <ul v-if="kelasArr.length > 0" role="list" class="mx-7 border-x">
         <li
           v-for="(kelas, kelasIndex) in kelasArr"
           :key="kelasIndex"
@@ -58,13 +58,57 @@
           </div>
         </li>
       </ul>
+      <p v-else class="mx-7 text-gray-500 text-sm">
+        Tidak ada kelas yang tersedia.
+      </p>
+
+      <!-- Pagination -->
+      <div class="flex justify-between items-center mt-5 mx-7">
+        <div>
+          <button
+            :disabled="queryKelas.skip === 0"
+            @click="
+              queryKelas.skip -= queryKelas.take;
+              fetchKelasList();
+            "
+            class="inline-flex items-center font-medium border text-gray-500 text-sm gap-1.5 py-1 px-2.5 shadow rounded hover:bg-gray-100 disabled:cursor-not-allowed"
+          >
+            <ArrowLeftIcon class="w-5" />
+            <span>Previous</span>
+          </button>
+        </div>
+        <span class="mr-2 font-medium text-sm text-gray-500"
+          >Page {{ Math.floor(queryKelas.skip / queryKelas.take) + 1 }}</span
+        >
+        <div>
+          <button
+            :disabled="kelasArr.length < queryKelas.take"
+            @click="
+              queryKelas.skip += queryKelas.take;
+              fetchKelasList();
+            "
+            class="inline-flex items-center font-medium border text-gray-500 text-sm gap-1.5 py-1 px-2.5 shadow rounded hover:bg-gray-100 disabled:cursor-not-allowed"
+          >
+            <span>Next</span>
+            <ArrowRightIcon class="w-5" />
+          </button>
+        </div>
+      </div>
     </template>
   </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
-import { PlusCircleIcon, Cog8ToothIcon } from "@heroicons/vue/24/outline";
+import {
+  PlusCircleIcon,
+  Cog8ToothIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+} from "@heroicons/vue/24/outline";
 import AddClassModal from "~/components/AddClassModal.vue";
+
+const route = useRoute();
+const page = route.query.page ? Number(route.query.page) : 1;
 
 const isOpen = ref(false);
 const { getListKelas } = useKelas();
@@ -75,10 +119,15 @@ function closeAddModal() {
 
 const kelasArr = ref<any>([]);
 
+const queryKelas = ref({
+  take: 20,
+  skip: (page - 1) * 20,
+});
+
 const fetchKelasList = async () => {
   const kelas = await getListKelas({
-    take: 20,
-    skip: 0,
+    take: queryKelas.value.take,
+    skip: queryKelas.value.skip,
   });
   kelasArr.value = kelas;
 };
