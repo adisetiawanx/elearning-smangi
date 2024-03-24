@@ -7,6 +7,7 @@
         :fetch-students-data="fetchStudentsData"
         @close="closeAddModal"
       />
+
       <button
         @click="isOpen = true"
         class="inline-flex items-center font-medium bg-green-500 text-white gap-1.5 mx-7 mt-5 py-1.5 px-4 shadow rounded hover:bg-green-600"
@@ -18,11 +19,13 @@
         <label for="search" class="sr-only">Search</label>
         <div class="rounded shadow-sm">
           <input
+            @input="searchStudentsData"
+            v-model="queryStudent.search"
             type="text"
             name="search"
             id="search"
             class="block w-full pl-6 pr-3 py-2 border border-gray-300 rounded leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            placeholder="Cari nama siswa"
+            placeholder="Cari siswa..."
           />
         </div>
       </div>
@@ -37,24 +40,38 @@
             'border-t',
           ]"
         >
+          <DeleteStudentModal
+            :id="student.id"
+            :isOpen="isOpenDeleteModal"
+            :fetch-data-student="fetchStudentsData"
+            @close="closeDeleteModal"
+          />
           <div
-            class="group flex items-center justify-between px-4 py-3 hover:bg-gray-50 sm:px-6 text-sm"
+            class="group flex items-center justify-between px-4 py-3 hover:bg-gray-50 sm:px-6 text-sm text-center"
           >
-            <span class="flex-1 truncate font-medium">
+            <span class="flex-1 truncate font-medium text-left">
               {{ student.name }}
             </span>
-            <span class="flex-initial truncate">{{ student.Class.name }}</span>
-            <NuxtLink
-              :to="`/administrator/siswa/${student.id}`"
-              class="flex-1 flex justify-end"
-            >
-              <Cog8ToothIcon
-                class="w-6 bg-green-500 p-0.5 rounded shadow text-white cursor-pointer"
-              />
-            </NuxtLink>
+            <span class="flex-1 truncate hidden lg:block">
+              {{ student.email }}
+            </span>
+            <span class="flex-1 truncate">{{ student.Class.name }}</span>
+            <div class="flex-1 flex justify-end gap-2">
+              <NuxtLink :to="`/administrator/siswa/${student.id}`">
+                <Cog8ToothIcon
+                  class="w-6 bg-green-500 p-0.5 rounded shadow text-white cursor-pointer"
+                />
+              </NuxtLink>
+              <button @click="isOpenDeleteModal = true">
+                <TrashIcon
+                  class="w-6 bg-red-500 p-0.5 rounded shadow text-white cursor-pointer"
+                />
+              </button>
+            </div>
           </div>
         </li>
       </ul>
+      <Spinner v-else-if="fetchStudentDataStatus.isLoading" />
       <p v-else class="mx-7 text-gray-500 text-sm">
         Tidak ada siswa yang tersedia.
       </p>
@@ -97,19 +114,33 @@
 </template>
 
 <script lang="ts" setup>
+// @ts-ignore
+import { debounce } from "lodash";
 import {
   Cog8ToothIcon,
+  TrashIcon,
   PlusCircleIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
 } from "@heroicons/vue/24/outline";
 
 const isOpen = ref(false);
+const isOpenDeleteModal = ref(false);
+
+const fetchStudentDataStatus = ref({
+  isLoading: false,
+  isError: false,
+  isSuccess: false,
+});
 
 const { getStudentsData } = useStudent();
 
 function closeAddModal() {
   isOpen.value = false;
+}
+
+function closeDeleteModal() {
+  isOpenDeleteModal.value = false;
 }
 
 const studentArr = ref<any>([]);
@@ -120,17 +151,28 @@ const page = route.query.page ? Number(route.query.page) : 1;
 const queryStudent = ref({
   take: 20,
   skip: (page - 1) * 20,
+  search: "",
 });
 
 const fetchStudentsData = async () => {
   studentArr.value = await getStudentsData({
     take: queryStudent.value.take,
     skip: queryStudent.value.skip,
+    search: queryStudent.value.search,
   });
 };
 
-onMounted(async () => {
+const searchStudentsData = debounce(async () => {
+  fetchStudentDataStatus.value.isLoading = true;
+  queryStudent.value.skip = 0;
   await fetchStudentsData();
+  fetchStudentDataStatus.value.isLoading = false;
+}, 500);
+
+onMounted(async () => {
+  fetchStudentDataStatus.value.isLoading = true;
+  await fetchStudentsData();
+  fetchStudentDataStatus.value.isLoading = false;
 });
 
 definePageMeta({

@@ -28,7 +28,7 @@
             >
 
             <!-- Form for adding Siswa -->
-            <form @submit.prevent="addSiswa" class="mt-3">
+            <form @submit.prevent="addStudent" class="mt-3">
               <div class="mb-4">
                 <label
                   for="email"
@@ -145,7 +145,9 @@
                   class="rounded shadow-sm"
                 />
               </div>
-              <div class="flex justify-end gap-3 mt-5 border-t pt-3">
+
+              <Spinner v-if="addStudentStatus.isLoading" class="mt-3" />
+              <div v-else class="flex justify-end gap-3 mt-5 border-t pt-3">
                 <button
                   @click="closeModal"
                   class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -178,6 +180,12 @@ const props = defineProps({
 });
 
 const { getListKelas } = useKelas();
+
+const addStudentStatus = ref({
+  isLoading: false,
+  isError: false,
+  isSuccess: false,
+});
 
 const student = ref({
   email: "",
@@ -227,7 +235,8 @@ const uploadProfilePicture = async (event: Event) => {
   isUploadProfilePicture.value = false;
 };
 
-const addSiswa = async () => {
+const addStudent = async () => {
+  addStudentStatus.value.isLoading = true;
   if (
     !student.value.email ||
     !student.value.password ||
@@ -256,11 +265,10 @@ const addSiswa = async () => {
 
   if (error.value) {
     alert(error.value.message);
-    return;
   }
 
-  alert("Siswa berhasil ditambahkan!");
   await props.fetchStudentsData();
+  addStudentStatus.value.isLoading = false;
   closeModal();
 };
 

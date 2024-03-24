@@ -1,18 +1,20 @@
-import { getStudents } from "~/server/queries/student";
+import { deleteStudent } from "~/server/queries/student";
 
 export default defineEventHandler(async (event) => {
   try {
-    const query = getQuery(event);
+    const params = getRouterParams(event);
 
-    const students = await getStudents({
-      take: Number(query.take || 20),
-      skip: Number(query.skip || 0),
-      search: String(query.search) || undefined,
-    });
+    const id = params.id;
+
+    if (!id) {
+      throw new ErrorWithCode(400, "Please fill all the fields");
+    }
+
+    await deleteStudent(id);
 
     return {
-      msg: "Classes fetched successfully",
-      data: students,
+      msg: "Student delete successfully",
+      data: {},
     };
   } catch (error) {
     if (error instanceof ErrorWithCode) {

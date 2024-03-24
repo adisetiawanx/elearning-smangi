@@ -181,7 +181,7 @@
                     @click="
                       () =>
                         signOut({
-                          callbackUrl: '/login',
+                          callbackUrl: '/administrator/login',
                         })
                     "
                     href="#"
@@ -302,7 +302,7 @@
                         @click="
                           () =>
                             signOut({
-                              callbackUrl: '/login',
+                              callbackUrl: '/administrator/login',
                             })
                         "
                         href="#"
@@ -327,7 +327,9 @@
           class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8"
         >
           <div class="min-w-0 flex-1">
-            <h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
+            <h1
+              class="inline-flex gap-2 items-center text-lg font-medium leading-6 text-gray-900 sm:truncate"
+            >
               <slot name="header" />
             </h1>
           </div>
