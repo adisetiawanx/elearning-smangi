@@ -2,18 +2,6 @@
   <NuxtLayout name="administrator-dashboard">
     <template #header>Guru Siswa : {{ teacherData.name }}</template>
     <template #content>
-      <AddTeacherClassModal
-        :teacherId="teacherId"
-        :fetch-teacher-data="fetchTeacherData"
-        :is-open="isModalAddClassOpen"
-        @close="() => (isModalAddClassOpen = false)"
-      />
-      <AddTeacherSubjectModal
-        :teacherId="teacherId"
-        :fetch-teacher-data="fetchTeacherData"
-        :is-open="isModalAddSubjectOpen"
-        @close="() => (isModalAddSubjectOpen = false)"
-      />
       <form v-if="teacherData" @submit.prevent="" class="mt-5 mx-5">
         <div class="mb-4">
           <label for="email" class="block text-sm font-medium text-gray-700"
@@ -94,53 +82,11 @@
           </button>
         </div>
       </form>
-      <!-- List kelas -->
-      <div class="mx-5 mt-2">
-        <div class="mb-2 flex gap-2 items-center">
-          <h3 class="font-medium">List kelas yang diajarkan</h3>
-          <button
-            @click="() => (isModalAddClassOpen = true)"
-            class="bg-gray-600 rounded shadow-sm p-0.5"
-          >
-            <PlusIcon class="w-5 text-white" />
-          </button>
-        </div>
-        <p
-          v-if="teacherData.Class && teacherData.Class.length <= 0"
-          class="text-sm text-gray-500"
-        >
-          Tidak ada kelas yang diajarkan...
-        </p>
-        <ul v-else role="list" class="border-x max-h-96 overflow-y-auto">
-          <li
-            v-for="(kelas, kelasIndex) in teacherData.Class"
-            :key="kelas.id"
-            :class="[
-              kelasIndex + 1 == teacherData.Class.length ? 'border-b' : '',
-              'border-t',
-            ]"
-          >
-            <div
-              class="group flex items-center justify-between px-4 py-3 hover:bg-gray-50 sm:px-6 text-sm"
-            >
-              <span class="flex-1 truncate font-medium">
-                {{ kelas.name }}
-              </span>
-            </div>
-          </li>
-        </ul>
-      </div>
 
       <!-- List Mata Pelajaran -->
       <div class="mx-5 border-t pt-3 mt-5 mb-10">
         <div class="mb-2 flex gap-2 items-center">
           <h3 class="font-medium">List mata pelajaran yang diajarkan</h3>
-          <button
-            @click="() => (isModalAddSubjectOpen = true)"
-            class="bg-gray-600 rounded shadow-sm p-0.5"
-          >
-            <PlusIcon class="w-5 text-white" />
-          </button>
         </div>
         <p
           v-if="teacherData.Subject && teacherData.Subject.length <= 0"
@@ -172,10 +118,7 @@
 </template>
 
 <script lang="ts" setup>
-import { PlusIcon } from "@heroicons/vue/24/outline";
 const teacherData = ref<any>({});
-const isModalAddClassOpen = ref(false);
-const isModalAddSubjectOpen = ref(false);
 
 const { getTeacherById } = useTeacher();
 

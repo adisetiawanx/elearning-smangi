@@ -2,12 +2,6 @@
   <NuxtLayout name="administrator-dashboard">
     <template #header>Edit Kelas : {{ kelasData.name }}</template>
     <template #content>
-      <AddClassSubjectModal
-        :class-id="kelasId"
-        :fetch-class-data="fetchClassData"
-        :is-open="isModalAddSubjectOpen"
-        @close="() => (isModalAddSubjectOpen = false)"
-      />
       <form v-if="kelasData" @submit.prevent="" class="mt-5 mx-5">
         <div class="mb-4">
           <label for="name" class="block text-sm font-medium text-gray-700"
@@ -47,13 +41,7 @@
       </form>
       <div class="mx-5 mt-2">
         <div class="mb-2 flex gap-2 items-center">
-          <h3 class="font-medium">List mata pelajaran yang diajarkan</h3>
-          <button
-            @click="() => (isModalAddSubjectOpen = true)"
-            class="bg-gray-600 rounded shadow-sm p-0.5"
-          >
-            <PlusIcon class="w-5 text-white" />
-          </button>
+          <h3 class="font-medium">List mata pelajaran</h3>
         </div>
         <p
           v-if="kelasData.Subject && kelasData.Subject.length <= 0"

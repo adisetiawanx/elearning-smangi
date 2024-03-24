@@ -37,10 +37,18 @@
           ]"
         >
           <div
-            class="group flex items-center justify-between px-4 py-3 hover:bg-gray-50 sm:px-6 text-sm"
+            class="group flex items-center justify-between px-4 py-3 hover:bg-gray-50 sm:px-6 text-sm text-center"
           >
-            <span class="flex-1 truncate font-medium">
+            <span class="flex-1 truncate font-medium text-left">
               {{ subject.name }}
+            </span>
+
+            <span class="flex-1 truncate">
+              {{ subject.Class.name }}
+            </span>
+
+            <span class="flex-1 truncate">
+              {{ subject.Teacher.name }}
             </span>
 
             <div class="flex-1 flex justify-end">

@@ -12,10 +12,10 @@ export const getTeachers = async ({
   take,
   skip,
 }: {
-  take: number;
-  skip: number;
+  take: number | undefined;
+  skip: number | undefined;
 }) => {
-  return Prisma.teacher.findMany({
+  return await Prisma.teacher.findMany({
     take: take,
     skip: skip,
     select: {
@@ -55,39 +55,7 @@ export const getTeacherByIdWithPassword = async (id: string) => {
       id,
     },
     include: {
-      Class: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
-      Subject: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
-    },
-  });
-};
-
-export const addSubjectToTeacher = async ({
-  id,
-  subjectName,
-}: {
-  id: string;
-  subjectName: string;
-}) => {
-  return Prisma.teacher.update({
-    where: {
-      id,
-    },
-    data: {
-      Subject: {
-        connect: {
-          name: subjectName,
-        },
-      },
+      Subject: true,
     },
   });
 };

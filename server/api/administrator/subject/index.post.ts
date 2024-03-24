@@ -4,6 +4,8 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
     const name = body.name;
+    const teacherId = body.teacher_id;
+    const classId = body.class_id;
 
     if (!name) {
       throw new ErrorWithCode(400, "Please fill all the fields");
@@ -11,6 +13,8 @@ export default defineEventHandler(async (event) => {
 
     const createdSubject = await addSubject({
       name: name,
+      teacherId: teacherId,
+      classId: classId,
     });
 
     return {

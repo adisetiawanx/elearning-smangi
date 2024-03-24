@@ -40,7 +40,6 @@ model Teacher {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Class      Class[]
   Subject    Subject[]
   Material   Material[]
   Assignment Assignment[]
@@ -86,7 +85,6 @@ model Class {
   updatedAt DateTime @updatedAt
 
   Student    Student[]
-  Teacher    Teacher[]
   Subject    Subject[]
   Material   Material[]
   Assignment Assignment[]
@@ -94,13 +92,16 @@ model Class {
 
 model Subject {
   id   String @id @default(cuid())
-  name String @unique
+  name String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Class      Class[]
-  Teacher    Teacher[]
+  class_id   String
+  teacher_id String
+
+  Class      Class        @relation(fields: [class_id], references: [id])
+  Teacher    Teacher      @relation(fields: [teacher_id], references: [id])
   Material   Material[]
   Assignment Assignment[]
 }

@@ -42,7 +42,48 @@
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
-
+              <div class="mb-4">
+                <label
+                  for="kelas"
+                  class="block text-sm font-medium text-gray-700"
+                  >Kelas</label
+                >
+                <select
+                  id="kelas"
+                  v-model="subject.classId"
+                  class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                >
+                  <option value="">Pilih Kelas</option>
+                  <option
+                    v-for="(kelas, kelasIndex) in listClass"
+                    :key="kelasIndex"
+                    :value="kelas.id"
+                  >
+                    {{ kelas.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="mb-4">
+                <label
+                  for="teacher"
+                  class="block text-sm font-medium text-gray-700"
+                  >Guru</label
+                >
+                <select
+                  id="teacher"
+                  v-model="subject.teacherId"
+                  class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                >
+                  <option value="">Pilih Guru</option>
+                  <option
+                    v-for="(teacher, teacherIndex) in listTeacher"
+                    :key="teacherIndex"
+                    :value="teacher.id"
+                  >
+                    {{ teacher.name }}
+                  </option>
+                </select>
+              </div>
               <div class="flex justify-end gap-3 mt-5 border-t pt-3">
                 <button
                   @click="closeModal"
@@ -74,8 +115,15 @@ const props = defineProps({
   },
 });
 
+const { getListKelas } = useKelas();
+const { getTeachersData: getListTeacher } = useTeacher();
+
+const listClass = ref<any>([]);
+const listTeacher = ref<any>([]);
 const subject = ref({
   name: "",
+  teacherId: "",
+  classId: "",
 });
 
 const closeModal = () => {
@@ -94,6 +142,8 @@ const addSubject = async () => {
       method: "POST",
       body: {
         name: subject.value.name,
+        class_id: subject.value.classId,
+        teacher_id: subject.value.teacherId,
       },
     }
   );
@@ -110,6 +160,18 @@ const addSubject = async () => {
 
   closeModal();
 };
+
+onMounted(async () => {
+  listClass.value = await getListKelas({
+    take: undefined,
+    skip: 0,
+  });
+
+  listTeacher.value = await getListTeacher({
+    take: undefined,
+    skip: 0,
+  });
+});
 
 const emit = defineEmits(["close"]);
 </script>

@@ -5,12 +5,12 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event);
 
     const teachers = await getTeachers({
-      take: Number(query.take || 20),
-      skip: Number(query.skip || 0),
+      take: Number(query.take) || undefined,
+      skip: Number(query.skip) || undefined,
     });
 
     return {
-      msg: "Classes fetched successfully",
+      msg: "Teachers fetched successfully",
       data: teachers,
     };
   } catch (error) {

@@ -24,36 +24,6 @@
           </button>
         </div>
       </form>
-
-      <div class="mx-5 mt-5">
-        <div class="mb-2">
-          <h3 class="font-medium">List guru yang mengajar mapel ini</h3>
-        </div>
-        <p
-          v-if="subjectData.Teacher && subjectData.Teacher.length <= 0"
-          class="text-sm text-gray-500"
-        >
-          Tidak ada guru...
-        </p>
-        <ul v-else role="list" class="border-x max-h-96 overflow-y-auto">
-          <li
-            v-for="(teacher, teacherIndex) in subjectData.Teacher"
-            :key="teacher.id"
-            :class="[
-              teacherIndex + 1 == subjectData.Teacher.length ? 'border-b' : '',
-              'border-t',
-            ]"
-          >
-            <div
-              class="group flex items-center justify-between px-4 py-3 hover:bg-gray-50 sm:px-6 text-sm"
-            >
-              <span class="flex-1 truncate font-medium">
-                {{ teacher.name }}
-              </span>
-            </div>
-          </li>
-        </ul>
-      </div>
     </template>
   </NuxtLayout>
 </template>

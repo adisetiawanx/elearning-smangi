@@ -50,9 +50,6 @@ async function main() {
       nuptk: "1234567890",
       phone: "081234567890",
       profile_image: "https://avatars.githubusercontent.com/u/47200040?v=4",
-      Class: {
-        connect: [{ id: class1.id }, { id: class2.id }],
-      },
     },
   });
 }
