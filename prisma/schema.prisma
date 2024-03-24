@@ -53,27 +53,27 @@ model Student {
   nis           String
   profile_image String?
   phone         String?
-  class_id      String
+  class_id      String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Class Class @relation(fields: [class_id], references: [id])
+  Class Class? @relation(fields: [class_id], references: [id], onDelete: SetNull)
 
   StudentAssigmentGrade StudentAssigmentGrade[]
 }
 
 model StudentAssigmentGrade {
-  id           String @id @default(cuid())
-  student_id   String
-  assigment_id String
+  id           String  @id @default(cuid())
+  student_id   String?
+  assigment_id String?
   grade        Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Student   Student    @relation(fields: [student_id], references: [id])
-  Assigment Assignment @relation(fields: [assigment_id], references: [id])
+  Student   Student?    @relation(fields: [student_id], references: [id], onDelete: SetNull)
+  Assigment Assignment? @relation(fields: [assigment_id], references: [id], onDelete: SetNull)
 }
 
 model Class {
@@ -97,30 +97,30 @@ model Subject {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  class_id   String
-  teacher_id String
+  class_id   String?
+  teacher_id String?
 
-  Class      Class        @relation(fields: [class_id], references: [id])
-  Teacher    Teacher      @relation(fields: [teacher_id], references: [id])
+  Class      Class?       @relation(fields: [class_id], references: [id], onDelete: SetNull)
+  Teacher    Teacher?     @relation(fields: [teacher_id], references: [id], onDelete: SetNull)
   Material   Material[]
   Assignment Assignment[]
 }
 
 model Material {
-  id         String @id @default(cuid())
+  id         String  @id @default(cuid())
   title      String
   content    String
-  class_name String
-  subject_id String
-  teacher_id String
+  class_name String?
+  subject_id String?
+  teacher_id String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   MediaFile MediaFile[]
-  Class     Class       @relation(fields: [class_name], references: [id])
-  Subject   Subject     @relation(fields: [subject_id], references: [id])
-  Teacher   Teacher     @relation(fields: [teacher_id], references: [id])
+  Class     Class?      @relation(fields: [class_name], references: [id], onDelete: SetNull)
+  Subject   Subject?    @relation(fields: [subject_id], references: [id], onDelete: SetNull)
+  Teacher   Teacher?    @relation(fields: [teacher_id], references: [id], onDelete: SetNull)
 }
 
 model Assignment {
@@ -128,17 +128,17 @@ model Assignment {
   title      String
   content    String
   deadline   DateTime
-  subject_id String
-  teacher_id String
-  class_name String
+  subject_id String?
+  teacher_id String?
+  class_name String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   MediaFile             MediaFile[]
-  Class                 Class                   @relation(fields: [class_name], references: [id])
-  Subject               Subject                 @relation(fields: [subject_id], references: [id])
-  Teacher               Teacher                 @relation(fields: [teacher_id], references: [id])
+  Class                 Class?                  @relation(fields: [class_name], references: [id], onDelete: SetNull)
+  Subject               Subject?                @relation(fields: [subject_id], references: [id], onDelete: SetNull)
+  Teacher               Teacher?                @relation(fields: [teacher_id], references: [id], onDelete: SetNull)
   StudentAssigmentGrade StudentAssigmentGrade[]
 }
 

@@ -14,15 +14,17 @@
         <PlusCircleIcon class="w-5" />
         <span>Guru</span>
       </button>
-      <div class="mb-3 mt-5 mx-7">
+      <div class="mb-3 mt-3 mx-7">
         <label for="search" class="sr-only">Search</label>
         <div class="relative rounded shadow-sm">
           <input
+            @input="searchTeachersData"
+            v-model="queryTeacher.search"
             type="text"
             name="search"
             id="search"
             class="block w-full pl-6 pr-3 py-2 border border-gray-300 rounded leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            placeholder="Cari nama siswa"
+            placeholder="Cari guru..."
           />
         </div>
       </div>
@@ -37,26 +39,40 @@
             'border-t',
           ]"
         >
+          <DeleteTeacherModal
+            :id="teacher.id"
+            :is-open="isOpenDeleteModal"
+            :fetch-data-teacher="fetchTeachersData"
+            @close="closeDeleteModal"
+          />
           <div
-            class="group flex items-center justify-between px-4 py-3 hover:bg-gray-50 sm:px-6 text-sm"
+            class="group flex items-center justify-between px-4 py-3 hover:bg-gray-50 sm:px-6 text-sm text-center"
           >
-            <span class="flex-1 truncate font-medium">
+            <span class="flex-1 truncate font-medium text-left">
               {{ teacher.name }}
             </span>
-            <span class="flex-initial truncate tracking-wide">{{
-              teacher.nuptk
+            <span class="flex-1 truncate tracking-wide">{{
+              teacher.email
             }}</span>
-            <NuxtLink
-              :to="`/administrator/guru/${teacher.id}`"
-              class="flex-1 flex justify-end"
-            >
-              <Cog8ToothIcon
-                class="w-6 bg-green-500 p-0.5 rounded shadow text-white cursor-pointer"
-              />
-            </NuxtLink>
+            <span class="flex-1 truncate tracking-wide">{{
+              teacher.phone
+            }}</span>
+            <div class="flex-1 flex justify-end gap-2">
+              <NuxtLink :to="`/administrator/guru/${teacher.id}`">
+                <Cog8ToothIcon
+                  class="w-6 bg-green-500 p-0.5 rounded shadow text-white cursor-pointer"
+                />
+              </NuxtLink>
+              <button @click="isOpenDeleteModal = true">
+                <TrashIcon
+                  class="w-6 bg-red-500 p-0.5 rounded shadow text-white cursor-pointer"
+                />
+              </button>
+            </div>
           </div>
         </li>
       </ul>
+      <Spinner v-else-if="fetchTeacherDataStatus.isLoading" />
       <p v-else class="mx-7 text-gray-500 text-sm">
         Tidak ada guru yang tersedia.
       </p>
@@ -99,39 +115,64 @@
 </template>
 
 <script lang="ts" setup>
+// @ts-ignore
+import { debounce } from "lodash";
 import {
   Cog8ToothIcon,
   PlusCircleIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
+  TrashIcon,
 } from "@heroicons/vue/24/outline";
 
-const isOpen = ref(false);
 const { getTeachersData } = useTeacher();
+
+const isOpen = ref(false);
+const isOpenDeleteModal = ref(false);
 
 const closeAddModal = () => {
   isOpen.value = false;
 };
 
+function closeDeleteModal() {
+  isOpenDeleteModal.value = false;
+}
+
 const route = useRoute();
 const page = route.query.page ? Number(route.query.page) : 1;
 
 const teachersArr = ref<any>([]);
+const fetchTeacherDataStatus = ref({
+  isLoading: false,
+  isError: false,
+  isSuccess: false,
+});
 
 const queryTeacher = ref({
   take: 20,
   skip: (page - 1) * 20,
+  search: "",
 });
 
 const fetchTeachersData = async () => {
   teachersArr.value = await getTeachersData({
     take: queryTeacher.value.take,
     skip: queryTeacher.value.skip,
+    search: queryTeacher.value.search,
   });
 };
 
-onMounted(async () => {
+const searchTeachersData = debounce(async () => {
+  fetchTeacherDataStatus.value.isLoading = true;
+  queryTeacher.value.skip = 0;
   await fetchTeachersData();
+  fetchTeacherDataStatus.value.isLoading = false;
+}, 500);
+
+onMounted(async () => {
+  fetchTeacherDataStatus.value.isLoading = true;
+  await fetchTeachersData();
+  fetchTeacherDataStatus.value.isLoading = false;
 });
 
 definePageMeta({

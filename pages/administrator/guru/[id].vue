@@ -1,8 +1,20 @@
 <template>
   <NuxtLayout name="administrator-dashboard">
-    <template #header>Guru Siswa : {{ teacherData.name }}</template>
+    <template #header
+      ><span>
+        <ArrowLeftIcon
+          @click="navigateTo('/administrator/guru')"
+          class="w-5 text-gray-500 cursor-pointer"
+        />
+      </span>
+      Edit Guru</template
+    >
     <template #content>
-      <form v-if="teacherData" @submit.prevent="" class="mt-5 mx-5">
+      <form
+        v-if="teacherData"
+        @submit.prevent="updateTeacher"
+        class="mt-5 mx-5"
+      >
         <div class="mb-4">
           <label for="email" class="block text-sm font-medium text-gray-700"
             >Email</label
@@ -63,10 +75,18 @@
           <label for="foto" class="block text-sm font-medium text-gray-700"
             >Foto Profile</label
           >
-          <input type="file" id="foto" accept="image/*" class="mt-1 text-sm" />
+          <input
+            @change="uploadProfilePicture"
+            type="file"
+            id="foto"
+            accept="image/*"
+            class="mt-1 text-sm"
+          />
         </div>
-        <div v-if="teacherData.profile_image" class="mb-4">
+        <div class="mb-4">
+          <Spinner v-if="isUploadProfilePicture" />
           <NuxtImg
+            v-else-if="teacherData.profile_image && !isUploadProfilePicture"
             :src="teacherData.profile_image"
             width="300"
             layout="fixed"
@@ -75,8 +95,9 @@
         </div>
         <div class="flex justify-end gap-3 mt-5 border-t pt-3">
           <button
+            :disabled="isUploadProfilePicture"
             type="submit"
-            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:cursor-not-allowed"
           >
             Simpan
           </button>
@@ -109,6 +130,9 @@
               <span class="flex-1 truncate font-medium">
                 {{ subject.name }}
               </span>
+              <span class="flex-1 truncate">
+                {{ subject.Class.name }}
+              </span>
             </div>
           </li>
         </ul>
@@ -118,7 +142,15 @@
 </template>
 
 <script lang="ts" setup>
+import { ArrowLeftIcon } from "@heroicons/vue/24/outline";
+
 const teacherData = ref<any>({});
+const updateTeacherStatus = ref({
+  isLoading: false,
+  isError: false,
+  isSuccess: false,
+});
+const isUploadProfilePicture = ref(false);
 
 const { getTeacherById } = useTeacher();
 
@@ -127,6 +159,72 @@ const teacherId = route.params.id as string;
 
 const fetchTeacherData = async () => {
   teacherData.value = await getTeacherById(teacherId);
+};
+
+const uploadProfilePicture = async (event: Event) => {
+  isUploadProfilePicture.value = true;
+  const formData = new FormData();
+  //@ts-expect-error
+  formData.append("file", event.target.files[0]);
+
+  const { data: respone, error } = await useFetch("/api/administrator/image", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (error.value) {
+    console.error(error.value);
+    return;
+  }
+
+  if (respone.value) {
+    //@ts-expect-error
+    teacherData.value.profile_image = respone.value.data?.url;
+  }
+
+  isUploadProfilePicture.value = false;
+};
+
+const updateTeacher = async () => {
+  updateTeacherStatus.value.isLoading = true;
+  console.log(teacherData.value);
+  if (
+    !teacherData.value.email ||
+    !teacherData.value.password ||
+    !teacherData.value.name ||
+    !teacherData.value.nuptk ||
+    !teacherData.value.phone ||
+    !teacherData.value.profile_image
+  ) {
+    alert("Tolong isi semua field!");
+    return;
+  }
+
+  const { data: respone, error } = await useFetch(
+    `/api/administrator/teacher/${teacherId}`,
+    {
+      method: "PUT",
+      body: {
+        email: teacherData.value.email,
+        password: teacherData.value.password,
+        name: teacherData.value.name,
+        nuptk: teacherData.value.nuptk,
+        phone: teacherData.value.phone,
+        profile_url: teacherData.value.profile_image,
+      },
+    }
+  );
+
+  if (error.value) {
+    alert(error.value.message);
+  }
+
+  if (respone.value) {
+    updateTeacherStatus.value.isSuccess = true;
+    teacherData.value = respone.value.data;
+    alert("Berhasil mengupdate data guru!");
+  }
+  updateTeacherStatus.value.isLoading = false;
 };
 
 onMounted(async () => {

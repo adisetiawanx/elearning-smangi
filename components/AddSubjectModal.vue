@@ -170,6 +170,7 @@ onMounted(async () => {
   listTeacher.value = await getListTeacher({
     take: undefined,
     skip: 0,
+    search: "",
   });
 });
 

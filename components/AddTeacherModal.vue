@@ -28,7 +28,7 @@
             >
 
             <!-- Form for adding Siswa -->
-            <form @submit.prevent="addSiswa" class="mt-3">
+            <form @submit.prevent="addTeacher" class="mt-3">
               <div class="mb-4">
                 <label
                   for="email"
@@ -124,7 +124,8 @@
                   class="rounded shadow-sm"
                 />
               </div>
-              <div class="flex justify-end gap-3 mt-5 border-t pt-3">
+              <Spinner v-if="addTeacherStatus.isLoading" class="mt-3" />
+              <div v-else class="flex justify-end gap-3 mt-5 border-t pt-3">
                 <button
                   @click="closeModal"
                   class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -136,7 +137,7 @@
                   type="submit"
                   class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:cursor-not-allowed"
                 >
-                  Add Siswa
+                  Add Guru
                 </button>
               </div>
             </form>
@@ -163,6 +164,12 @@ const teacher = ref({
   nuptk: "",
   phone: "",
   profileUrl: null as string | null,
+});
+
+const addTeacherStatus = ref({
+  isLoading: false,
+  isError: false,
+  isSuccess: false,
 });
 
 const isUploadProfilePicture = ref(false);
@@ -202,7 +209,8 @@ const uploadProfilePicture = async (event: Event) => {
   isUploadProfilePicture.value = false;
 };
 
-const addSiswa = async () => {
+const addTeacher = async () => {
+  addTeacherStatus.value.isLoading = true;
   if (
     !teacher.value.email ||
     !teacher.value.password ||
@@ -232,7 +240,8 @@ const addSiswa = async () => {
     return;
   }
 
-  alert("Siswa berhasil ditambahkan!");
+  alert("Guru berhasil ditambahkan!");
+  addTeacherStatus.value.isLoading = false;
   await props.fetchTeachersData();
   closeModal();
 };

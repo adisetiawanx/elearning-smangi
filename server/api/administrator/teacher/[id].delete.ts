@@ -1,18 +1,20 @@
-import { getTeachers } from "~/server/queries/teacher";
+import { deleteTeacher } from "~/server/queries/teacher";
 
 export default defineEventHandler(async (event) => {
   try {
-    const query = getQuery(event);
+    const params = getRouterParams(event);
 
-    const teachers = await getTeachers({
-      take: Number(query.take) || undefined,
-      skip: Number(query.skip) || undefined,
-      search: String(query.search) || undefined,
-    });
+    const id = params.id;
+
+    if (!id) {
+      throw new ErrorWithCode(400, "Please fill all the fields");
+    }
+
+    await deleteTeacher(id);
 
     return {
-      msg: "Teachers fetched successfully",
-      data: teachers,
+      msg: "Teacher delete successfully",
+      data: {},
     };
   } catch (error) {
     if (error instanceof ErrorWithCode) {

@@ -43,12 +43,12 @@
               {{ subject.name }}
             </span>
 
-            <span class="flex-1 truncate">
-              {{ subject.Class.name }}
+            <span lass="flex-1 truncate">
+              {{ subject.Class?.name || "" }}
             </span>
 
             <span class="flex-1 truncate">
-              {{ subject.Teacher.name }}
+              {{ subject.Teacher?.name || "" }}
             </span>
 
             <div class="flex-1 flex justify-end">
