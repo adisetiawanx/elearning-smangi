@@ -109,6 +109,9 @@ const updateSubject = async () => {
     `/api/administrator/subject/${subjectId}`,
     {
       method: "PUT",
+      headers: {
+        Authorization: "Bearer " + useCookie("auth:token").value,
+      },
       body: {
         name: subjectData.value.name,
         class_id: subjectData.value.class_id,

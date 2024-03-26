@@ -2,6 +2,8 @@ import { addSubject } from "~/server/queries/subject";
 
 export default defineEventHandler(async (event) => {
   try {
+    await isAdministratorServer(event);
+
     const body = await readBody(event);
     const name = body.name;
     const teacherId = body.teacher_id;

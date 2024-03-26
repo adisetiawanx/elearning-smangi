@@ -2,6 +2,8 @@ import { getSubject } from "~/server/queries/subject";
 
 export default defineEventHandler(async (event) => {
   try {
+    await isAdministratorServer(event);
+
     const query = getQuery(event);
 
     const subjects = await getSubject({

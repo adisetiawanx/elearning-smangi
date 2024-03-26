@@ -5,7 +5,12 @@ export default () => {
     search?: string;
   }) => {
     const { data: respone, error } = await useFetch(
-      `/api/administrator/teacher?take=${queryTeacher.take}&skip=${queryTeacher.skip}&search=${queryTeacher.search}`
+      `/api/administrator/teacher?take=${queryTeacher.take}&skip=${queryTeacher.skip}&search=${queryTeacher.search}`,
+      {
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
     );
 
     if (error.value) {
@@ -20,7 +25,12 @@ export default () => {
 
   const getTeacherById = async (id: any) => {
     const { data: respone, error } = await useFetch(
-      `/api/administrator/teacher/${id}`
+      `/api/administrator/teacher/${id}`,
+      {
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
     );
 
     if (error.value) {
@@ -38,6 +48,9 @@ export default () => {
       `/api/administrator/teacher/${id}`,
       {
         method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
       }
     );
 

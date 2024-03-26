@@ -2,6 +2,7 @@ import { addStudent } from "~/server/queries/student";
 
 export default defineEventHandler(async (event) => {
   try {
+    await isAdministratorServer(event);
     const body = await readBody(event);
 
     const email = body.email;

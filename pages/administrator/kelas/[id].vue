@@ -101,6 +101,9 @@ const updateClass = async () => {
     `/api/administrator/class/${kelasId}`,
     {
       method: "PUT",
+      headers: {
+        Authorization: "Bearer " + useCookie("auth:token").value,
+      },
       body: {
         name: kelasData.value.name,
         major: kelasData.value.major,

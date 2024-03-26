@@ -5,7 +5,12 @@ export default () => {
     search?: string;
   }) => {
     const { data: respone, error } = await useFetch(
-      `/api/administrator/student?take=${querySiswa.take}&skip=${querySiswa.skip}&search=${querySiswa.search}`
+      `/api/administrator/student?take=${querySiswa.take}&skip=${querySiswa.skip}&search=${querySiswa.search}`,
+      {
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
     );
 
     if (error.value) {
@@ -20,7 +25,12 @@ export default () => {
 
   const getStudentById = async (id: any) => {
     const { data: respone, error } = await useFetch(
-      `/api/administrator/student/${id}`
+      `/api/administrator/student/${id}`,
+      {
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
     );
 
     if (error.value) {
@@ -39,6 +49,9 @@ export default () => {
       `/api/administrator/student/${id}`,
       {
         method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
       }
     );
 

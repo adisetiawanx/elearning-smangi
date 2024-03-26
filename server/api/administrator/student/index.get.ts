@@ -2,6 +2,8 @@ import { getStudents } from "~/server/queries/student";
 
 export default defineEventHandler(async (event) => {
   try {
+    await isAdministratorServer(event);
+
     const query = getQuery(event);
 
     const students = await getStudents({

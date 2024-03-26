@@ -9,7 +9,12 @@ export default () => {
     search?: string;
   }) => {
     const { data: respone, error } = await useFetch(
-      `/api/administrator/subject?take=${take}&skip=${skip}&search=${search}`
+      `/api/administrator/subject?take=${take}&skip=${skip}&search=${search}`,
+      {
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
     );
 
     if (error.value) {
@@ -24,7 +29,12 @@ export default () => {
 
   const getSubjectById = async (id: any) => {
     const { data: respone, error } = await useFetch(
-      `/api/administrator/subject/${id}`
+      `/api/administrator/subject/${id}`,
+      {
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
     );
 
     if (error.value) {
@@ -42,6 +52,9 @@ export default () => {
       `/api/administrator/subject/${id}`,
       {
         method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
       }
     );
 

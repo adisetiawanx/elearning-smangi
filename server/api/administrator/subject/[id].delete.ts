@@ -2,6 +2,8 @@ import { deleteSubject } from "~/server/queries/subject";
 
 export default defineEventHandler(async (event) => {
   try {
+    await isAdministratorServer(event);
+
     const params = getRouterParams(event);
 
     const id = params.id;

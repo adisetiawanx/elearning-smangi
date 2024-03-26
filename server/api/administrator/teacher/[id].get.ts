@@ -2,6 +2,7 @@ import { getTeacherByIdWithPassword } from "~/server/queries/teacher";
 
 export default defineEventHandler(async (event) => {
   try {
+    await isAdministratorServer(event);
     const params = getRouterParams(event);
 
     const teacherDB = await getTeacherByIdWithPassword(params.id);

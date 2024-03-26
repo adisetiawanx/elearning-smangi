@@ -2,6 +2,8 @@ import { getClassById } from "~/server/queries/class";
 
 export default defineEventHandler(async (event) => {
   try {
+    await isAdministratorServer(event);
+
     const params = getRouterParams(event);
     const classId = params.id;
 

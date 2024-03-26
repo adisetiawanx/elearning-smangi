@@ -2,6 +2,8 @@ import { getClasses } from "~/server/queries/class";
 
 export default defineEventHandler(async (event) => {
   try {
+    await isAdministratorServer(event);
+
     const query = getQuery(event);
 
     const classes = await getClasses({

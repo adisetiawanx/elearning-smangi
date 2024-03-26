@@ -2,6 +2,7 @@ import { deleteStudent } from "~/server/queries/student";
 
 export default defineEventHandler(async (event) => {
   try {
+    await isAdministratorServer(event);
     const params = getRouterParams(event);
 
     const id = params.id;

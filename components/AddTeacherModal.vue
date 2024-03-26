@@ -191,7 +191,7 @@ const uploadProfilePicture = async (event: Event) => {
   //@ts-expect-error
   formData.append("file", event.target.files[0]);
 
-  const { data: respone, error } = await useFetch("/api/administrator/image", {
+  const { data: respone, error } = await useFetch("/api/image", {
     method: "POST",
     body: formData,
   });

@@ -2,6 +2,8 @@ import { getSubjectById } from "~/server/queries/subject";
 
 export default defineEventHandler(async (event) => {
   try {
+    await isAdministratorServer(event);
+
     const params = getRouterParams(event);
     const subjectId = params.id;
 

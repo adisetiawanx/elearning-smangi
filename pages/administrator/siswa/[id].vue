@@ -154,7 +154,7 @@ const uploadProfilePicture = async (event: Event) => {
   //@ts-expect-error
   formData.append("file", event.target.files[0]);
 
-  const { data: respone, error } = await useFetch("/api/administrator/image", {
+  const { data: respone, error } = await useFetch("/api/image", {
     method: "POST",
     body: formData,
   });
@@ -192,6 +192,9 @@ const updateStudent = async () => {
     `/api/administrator/student/${studentId}`,
     {
       method: "PUT",
+      headers: {
+        Authorization: "Bearer " + useCookie("auth:token").value,
+      },
       body: {
         email: studentData.value.email,
         password: studentData.value.password,

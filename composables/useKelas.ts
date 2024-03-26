@@ -9,7 +9,12 @@ export default () => {
     search?: string;
   }) => {
     const { data: respone, error } = await useFetch(
-      `/api/administrator/class?take=${take}&skip=${skip}&search=${search}`
+      `/api/administrator/class?take=${take}&skip=${skip}&search=${search}`,
+      {
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
     );
 
     if (error.value) {
@@ -24,7 +29,12 @@ export default () => {
 
   const getKelasById = async (id: any) => {
     const { data: respone, error } = await useFetch(
-      `/api/administrator/class/${id}`
+      `/api/administrator/class/${id}`,
+      {
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
     );
 
     if (error.value) {
@@ -42,6 +52,9 @@ export default () => {
       `/api/administrator/class/${id}`,
       {
         method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
       }
     );
 
