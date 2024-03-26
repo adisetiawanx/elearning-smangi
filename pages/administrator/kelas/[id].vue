@@ -90,6 +90,13 @@ const updateClassStatus = ref({
 
 const updateClass = async () => {
   updateClassStatus.value.isLoading = true;
+
+  if (!kelasData.value.name || !kelasData.value.major) {
+    alert("Tolong isi semua field!");
+    updateClassStatus.value.isLoading = false;
+    return;
+  }
+
   const { data: respone, error } = await useFetch(
     `/api/administrator/class/${kelasId}`,
     {

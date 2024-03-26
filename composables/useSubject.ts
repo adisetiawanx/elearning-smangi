@@ -2,12 +2,14 @@ export default () => {
   const getListSubjects = async ({
     take,
     skip,
+    search,
   }: {
     take: number | undefined;
     skip: number | undefined;
+    search?: string;
   }) => {
     const { data: respone, error } = await useFetch(
-      `/api/administrator/subject?take=${take}&skip=${skip}`
+      `/api/administrator/subject?take=${take}&skip=${skip}&search=${search}`
     );
 
     if (error.value) {
@@ -35,30 +37,27 @@ export default () => {
     }
   };
 
-  const addSubjectToClass = async (classId: any, subjectName: any) => {
+  const deleteSubject = async (id: any) => {
     const { data: respone, error } = await useFetch(
-      `/api/administrator/class/subject`,
+      `/api/administrator/subject/${id}`,
       {
-        method: "POST",
-        body: {
-          class_id: classId,
-          subject_name: subjectName,
-        },
+        method: "DELETE",
       }
     );
 
     if (error.value) {
-      alert(error.value);
+      alert(error.value.message);
       return;
     }
 
     if (respone.value) {
-      return respone.value.data;
+      return respone.value;
     }
   };
+
   return {
     getListSubjects,
     getSubjectById,
-    addSubjectToClass,
+    deleteSubject,
   };
 };

@@ -165,6 +165,7 @@ onMounted(async () => {
   listClass.value = await getListKelas({
     take: undefined,
     skip: 0,
+    search: "",
   });
 
   listTeacher.value = await getListTeacher({

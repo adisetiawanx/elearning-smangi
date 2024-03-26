@@ -18,11 +18,13 @@
         <label for="search" class="sr-only">Search</label>
         <div class="rounded shadow-sm">
           <input
+            @input="searchSubjectData"
+            v-model="querySubject.search"
             type="text"
             name="search"
             id="search"
             class="block w-full pl-6 pr-3 py-2 border border-gray-300 rounded leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            placeholder="Cari nama mata pelajaran..."
+            placeholder="Cari mata pelajaran..."
           />
         </div>
       </div>
@@ -36,6 +38,12 @@
             'border-t',
           ]"
         >
+          <DeleteSubjectModal
+            :id="subject.id"
+            :is-open="isOpenDeleteModal"
+            :fetch-data-subject="fetchSubjectList"
+            @close="isOpenDeleteModal = false"
+          />
           <div
             class="group flex items-center justify-between px-4 py-3 hover:bg-gray-50 sm:px-6 text-sm text-center"
           >
@@ -51,19 +59,22 @@
               {{ subject.Teacher?.name || "" }}
             </span>
 
-            <div class="flex-1 flex justify-end">
-              <NuxtLink
-                :to="`/administrator/mata-pelajaran/${subject.id}`"
-                class="flex-1 flex justify-end"
-              >
+            <div class="flex-1 flex justify-end gap-2">
+              <NuxtLink :to="`/administrator/mata-pelajaran/${subject.id}`">
                 <Cog8ToothIcon
                   class="w-6 bg-green-500 p-0.5 rounded shadow text-white cursor-pointer"
                 />
               </NuxtLink>
+              <button @click="isOpenDeleteModal = true">
+                <TrashIcon
+                  class="w-6 bg-red-500 p-0.5 rounded shadow text-white cursor-pointer"
+                />
+              </button>
             </div>
           </div>
         </li>
       </ul>
+      <Spinner v-else-if="fetchSubjectDataStatus.isLoading" />
       <p v-else class="mx-7 text-gray-500 text-sm">
         Tidak ada mata pelajaran yang tersedia.
       </p>
@@ -106,8 +117,11 @@
 </template>
 
 <script lang="ts" setup>
+// @ts-ignore
+import { debounce } from "lodash";
 import {
   PlusCircleIcon,
+  TrashIcon,
   Cog8ToothIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -116,8 +130,16 @@ import {
 const route = useRoute();
 const page = route.query.page ? Number(route.query.page) : 1;
 
-const isOpen = ref(false);
 const { getListSubjects } = useSubject();
+
+const isOpen = ref(false);
+const isOpenDeleteModal = ref(false);
+
+const fetchSubjectDataStatus = ref({
+  isLoading: false,
+  isError: false,
+  isSuccess: false,
+});
 
 function closeAddModal() {
   isOpen.value = false;
@@ -128,18 +150,29 @@ const subjectArr = ref<any>([]);
 const querySubject = ref({
   take: 20,
   skip: (page - 1) * 20,
+  search: "",
 });
 
 const fetchSubjectList = async () => {
   const subjects = await getListSubjects({
     take: querySubject.value.take,
     skip: querySubject.value.skip,
+    search: querySubject.value.search,
   });
   subjectArr.value = subjects;
 };
 
-onMounted(async () => {
+const searchSubjectData = debounce(async () => {
+  fetchSubjectDataStatus.value.isLoading = true;
+  querySubject.value.skip = 0;
   await fetchSubjectList();
+  fetchSubjectDataStatus.value.isLoading = false;
+}, 500);
+
+onMounted(async () => {
+  fetchSubjectDataStatus.value.isLoading = true;
+  await fetchSubjectList();
+  fetchSubjectDataStatus.value.isLoading = false;
 });
 
 definePageMeta({

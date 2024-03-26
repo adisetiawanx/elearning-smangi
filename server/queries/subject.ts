@@ -3,13 +3,29 @@ import Prisma from "~/configs/db";
 export const getSubject = async ({
   take,
   skip,
+  search,
 }: {
   take: number | undefined;
   skip: number | undefined;
+  search?: string | undefined;
 }) => {
+  let where = {};
+  if (search) {
+    where = {
+      OR: [
+        {
+          name: {
+            contains: search,
+          },
+        },
+      ],
+    };
+  }
+
   return await Prisma.subject.findMany({
     take: take,
     skip: skip,
+    where,
     select: {
       id: true,
       name: true,
@@ -77,6 +93,45 @@ export const addSubject = async ({
     select: {
       id: true,
       name: true,
+    },
+  });
+};
+
+export const updateSubject = async ({
+  id,
+  name,
+  classId,
+  teacherId,
+}: {
+  id: string;
+  name: string;
+  classId: string;
+  teacherId: string;
+}) => {
+  return await Prisma.subject.update({
+    where: {
+      id: id,
+    },
+    data: {
+      name: name,
+      Class: {
+        connect: {
+          id: classId,
+        },
+      },
+      Teacher: {
+        connect: {
+          id: teacherId,
+        },
+      },
+    },
+  });
+};
+
+export const deleteSubject = async (id: string) => {
+  return Prisma.subject.delete({
+    where: {
+      id,
     },
   });
 };
