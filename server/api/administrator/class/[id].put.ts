@@ -1,4 +1,4 @@
-import { updateStudent } from "~/server/queries/student";
+import { updateClass } from "~/server/queries/class";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -6,41 +6,18 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
 
     const id = params.id;
-
-    const email = body.email;
     const name = body.name;
-    const nis = body.nis;
-    const phone = body.phone;
-    const kelas = body.kelas;
-    const profile_url = body.profile_url;
-    const password = body.password;
+    const major = body.major;
 
-    if (
-      !email ||
-      !password ||
-      !name ||
-      !nis ||
-      !phone ||
-      !kelas ||
-      !profile_url
-    ) {
+    if (!name || !major) {
       throw new ErrorWithCode(400, "Please fill all the fields");
     }
 
-    const studentDB = await updateStudent({
-      id,
-      email,
-      name,
-      nis,
-      phone,
-      kelas,
-      profile_url,
-      password,
-    });
+    const createdClass = await updateClass({ id, name, major });
 
     return {
-      msg: "Student update successfully",
-      data: studentDB,
+      mag: "Class updated successfully",
+      data: createdClass,
     };
   } catch (error) {
     if (error instanceof ErrorWithCode) {

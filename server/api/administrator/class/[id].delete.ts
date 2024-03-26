@@ -1,18 +1,20 @@
-import { getClasses } from "~/server/queries/class";
+import { deleteClass } from "~/server/queries/class";
 
 export default defineEventHandler(async (event) => {
   try {
-    const query = getQuery(event);
+    const params = getRouterParams(event);
 
-    const classes = await getClasses({
-      take: Number(query.take) || undefined,
-      skip: Number(query.skip) || undefined,
-      search: String(query.search) || undefined,
-    });
+    const id = params.id;
+
+    if (!id) {
+      throw new ErrorWithCode(400, "Please fill all the fields");
+    }
+
+    await deleteClass(id);
 
     return {
-      msg: "Classes fetched successfully",
-      data: classes,
+      msg: "Class delete successfully",
+      data: {},
     };
   } catch (error) {
     if (error instanceof ErrorWithCode) {

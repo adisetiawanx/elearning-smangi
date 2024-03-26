@@ -24,13 +24,13 @@
           <!-- The actual dialog panel -->
           <HeadlessDialogPanel class="w-full max-w-xl rounded bg-white p-5">
             <HeadlessDialogTitle class="border-b pb-3 font-medium text-lg"
-              >Hapus guru</HeadlessDialogTitle
+              >Hapus kelas</HeadlessDialogTitle
             >
 
             <p class="text-lg mt-3">
-              Apakah anda yakin ingin menghapus guru ini?
+              Apakah anda yakin ingin menghapus kelas ini?
             </p>
-            <Spinner v-if="deleteTeacherStatus.isLoading" class="mt-3" />
+            <Spinner v-if="deleteClassStatus.isLoading" class="mt-3" />
             <div v-else class="space-x-3 mt-3 flex justify-end">
               <button
                 @click="closeModal"
@@ -59,25 +59,25 @@ const props = defineProps({
     required: true,
   },
   isOpen: Boolean,
-  fetchDataTeacher: {
+  fetchDataClass: {
     type: Function as PropType<() => Promise<void>>,
     required: true,
   },
 });
 
-const deleteTeacherStatus = ref({
+const deleteClassStatus = ref({
   isLoading: false,
   isError: false,
   isSuccess: false,
 });
 
-const { deleteTeacher } = useTeacher();
+const { deleteKelas } = useKelas();
 
 const handleDeleteTeacher = async () => {
-  deleteTeacherStatus.value.isLoading = true;
-  await deleteTeacher(props.id);
-  await props.fetchDataTeacher();
-  deleteTeacherStatus.value.isLoading = false;
+  deleteClassStatus.value.isLoading = true;
+  await deleteKelas(props.id);
+  await props.fetchDataClass();
+  deleteClassStatus.value.isLoading = false;
   closeModal();
 };
 

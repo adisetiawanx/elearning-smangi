@@ -1,8 +1,8 @@
 <template>
   <NuxtLayout name="administrator-dashboard">
-    <template #header>Edit Kelas : {{ kelasData.name }}</template>
+    <template #header>Edit Kelas</template>
     <template #content>
-      <form v-if="kelasData" @submit.prevent="" class="mt-5 mx-5">
+      <form v-if="kelasData" @submit.prevent="updateClass" class="mt-5 mx-5">
         <div class="mb-4">
           <label for="name" class="block text-sm font-medium text-gray-700"
             >Nama</label
@@ -31,7 +31,9 @@
         </div>
 
         <div class="flex justify-end gap-3 mt-5 border-t pt-3">
+          <Spinner v-if="updateClassStatus.isLoading" />
           <button
+            v-else
             type="submit"
             class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
@@ -73,15 +75,43 @@
 </template>
 
 <script lang="ts" setup>
-import { PlusIcon } from "@heroicons/vue/24/outline";
-
 const kelasData = ref<any>({});
-const isModalAddSubjectOpen = ref(false);
 
 const { getKelasById } = useKelas();
 
 const route = useRoute();
 const kelasId = route.params.id as string;
+
+const updateClassStatus = ref({
+  isLoading: false,
+  isSuccess: false,
+  isFailed: false,
+});
+
+const updateClass = async () => {
+  updateClassStatus.value.isLoading = true;
+  const { data: respone, error } = await useFetch(
+    `/api/administrator/class/${kelasId}`,
+    {
+      method: "PUT",
+      body: {
+        name: kelasData.value.name,
+        major: kelasData.value.major,
+      },
+    }
+  );
+
+  if (error.value) {
+    alert(error.value.message);
+  }
+
+  if (respone.value) {
+    updateClassStatus.value.isSuccess = true;
+    kelasData.value = respone.value.data;
+    alert("Berhasil mengupdate data kelas!");
+  }
+  updateClassStatus.value.isLoading = false;
+};
 
 const fetchClassData = async () => {
   kelasData.value = await getKelasById(kelasId);

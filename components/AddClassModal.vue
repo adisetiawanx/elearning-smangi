@@ -109,7 +109,7 @@ const addClass = async () => {
   const { data: respone, error } = await useFetch("/api/administrator/class", {
     method: "POST",
     body: {
-      name: kelas.value.name,
+      name: kelas.value.name.toLocaleUpperCase(),
       major: kelas.value.jurusan,
     },
   });
