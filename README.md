@@ -9,17 +9,17 @@ prerequired:
 - Setting .env file
 
 ```bash
-bun install
+npm install
 ```
 
 ```bash
-bun prisma:migrate
+npm prisma:migrate
 ```
 
 ```bash
-bun prisma:generate
+npm prisma:generate
 ```
 
 ## Notes
 
-This is ht program for my thesis, I put it here for backup
+This is ht program for my thesis, I put it here for backup (the quality of the code is bad, I am running out of time hehe)
