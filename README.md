@@ -22,4 +22,4 @@ npm prisma:generate
 
 ## Notes
 
-This is ht program for my thesis, I put it here for backup (the quality of the code is bad, I am running out of time hehe)
+This is the program for my thesis, I put it here for backup (the quality of the code is bad, I am running out of time hehe)
