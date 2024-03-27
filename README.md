@@ -1,75 +1,25 @@
-# Nuxt 3 Minimal Starter
+# E-lerning SMA Negeri 1 Mengwi
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Installation
 
-## Setup
+prerequired:
 
-Make sure to install the dependencies:
+- Postgresql and create smangi db
+- cloudinary setup
+- Setting .env file
 
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
 bun install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+bun prisma:migrate
 ```
 
-## Production
-
-Build the application for production:
-
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+bun prisma:generate
 ```
 
-Locally preview production build:
+## Notes
 
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+This is ht program for my thesis, I put it here for backup
