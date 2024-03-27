@@ -1,8 +1,8 @@
-# E-lerning SMA Negeri 1 Mengwi
+# E-learning SMA Negeri 1 Mengwi
 
 ## Installation
 
-prerequired:
+pre-require:
 
 - Postgresql and create smangi db
 - cloudinary setup
@@ -20,6 +20,11 @@ npm prisma:migrate
 npm prisma:generate
 ```
 
+it's only for dummy data
+```bash
+node ./prisma/seed.js
+```
+
 ## Notes
 
-This is the program for my thesis, I put it here for backup (the quality of the code is bad, I am running out of time hehe)
+This is the program for my thesis (Bachelor), I put it here for backup (the quality of the code is bad, I am running out of time hehe)
