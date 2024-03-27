@@ -9,7 +9,7 @@
       />
       <button
         @click="isOpen = true"
-        class="inline-flex items-center font-medium bg-green-500 text-white gap-1.5 mx-7 mt-5 py-1.5 px-4 shadow rounded hover:bg-green-600"
+        class="inline-flex items-center font-medium bg-primary text-white gap-1.5 mx-7 mt-5 py-1.5 px-4 shadow rounded hover:bg-secondary"
       >
         <PlusCircleIcon class="w-5" />
         <span>Guru</span>
@@ -60,7 +60,7 @@
             <div class="flex-1 flex justify-end gap-2">
               <NuxtLink :to="`/administrator/guru/${teacher.id}`">
                 <Cog8ToothIcon
-                  class="w-6 bg-green-500 p-0.5 rounded shadow text-white cursor-pointer"
+                  class="w-6 bg-primary p-0.5 rounded shadow text-white cursor-pointer"
                 />
               </NuxtLink>
               <button @click="isOpenDeleteModal = true">

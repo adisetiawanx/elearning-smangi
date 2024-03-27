@@ -38,12 +38,12 @@ export default defineNuxtConfig({
       },
       token: {
         signInResponseTokenPointer: "/token/accessToken",
-        maxAgeInSeconds: 60 * 60 * 2, // 2 jam
+        maxAgeInSeconds: 60 * 60 * 24, // 1 days
         sameSiteAttribute: "lax",
       },
       refreshToken: {
         signInResponseRefreshTokenPointer: "/token/refreshToken",
-        maxAgeInSeconds: 60 * 60 * 24 * 14,
+        maxAgeInSeconds: 60 * 60 * 24 * 14, // 14 days
       },
     },
   },

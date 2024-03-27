@@ -10,7 +10,11 @@ const upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
     originalFileName = file.originalname;
-    if (file.mimetype == "image/png" || file.mimetype == "image/jpeg") {
+    if (
+      file.mimetype == "image/png" ||
+      file.mimetype == "image/jpeg" ||
+      file.mimetype == "image/webp"
+    ) {
       cb(null, true);
     } else {
       cb(new Error("Invalid file type"));

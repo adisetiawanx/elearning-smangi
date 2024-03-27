@@ -79,7 +79,7 @@
             @change="uploadProfilePicture"
             type="file"
             id="foto"
-            accept="image/*"
+            accept="image/png, image/jpeg, image/webp"
             class="mt-1 text-sm"
           />
         </div>
@@ -97,7 +97,7 @@
           <button
             :disabled="isUploadProfilePicture"
             type="submit"
-            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:cursor-not-allowed"
+            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:cursor-not-allowed"
           >
             Simpan
           </button>

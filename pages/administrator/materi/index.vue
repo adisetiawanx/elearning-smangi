@@ -36,7 +36,7 @@
                 class="flex-1 flex justify-end"
               >
                 <Cog8ToothIcon
-                  class="w-6 bg-green-500 p-0.5 rounded shadow text-white cursor-pointer"
+                  class="w-6 bg-primary p-0.5 rounded shadow text-white cursor-pointer"
                 />
               </NuxtLink>
             </div>

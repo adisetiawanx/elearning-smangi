@@ -53,11 +53,7 @@
                 </div>
               </TransitionChild>
               <div class="flex flex-shrink-0 items-center px-4">
-                <img
-                  class="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=purple&shade=500"
-                  alt="Your Company"
-                />
+                <img class="h-12 w-auto" src="/logo.png" alt="Your Company" />
               </div>
               <div class="mt-5 h-0 flex-1 overflow-y-auto">
                 <nav class="px-2">
@@ -103,11 +99,7 @@
       class="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-gray-200 lg:bg-gray-100 lg:pb-4 lg:pt-5"
     >
       <div class="flex flex-shrink-0 items-center px-6">
-        <img
-          class="h-8 w-auto"
-          src="https://tailwindui.com/img/logos/mark.svg?color=purple&shade=500"
-          alt="Your Company"
-        />
+        <img class="h-12 w-auto" src="/logo.png" alt="Your Company" />
       </div>
       <!-- Sidebar component, swap this element with another sidebar if you like -->
       <div class="mt-5 flex h-0 flex-1 flex-col overflow-y-auto pt-1">
@@ -123,16 +115,16 @@
                 >
                   <img
                     class="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
-                    src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80"
+                    :src="administratorData.profile_image"
                     alt=""
                   />
                   <span class="flex min-w-0 flex-1 flex-col">
-                    <span class="truncate text-sm font-medium text-gray-900"
-                      >Jessy Schwarz</span
-                    >
-                    <span class="truncate text-sm text-gray-500"
-                      >@jessyschwarz</span
-                    >
+                    <span class="truncate text-sm font-medium text-gray-900">{{
+                      administratorData.name
+                    }}</span>
+                    <span class="truncate text-sm text-gray-500">{{
+                      administratorData.email
+                    }}</span>
                   </span>
                 </span>
                 <ChevronUpDownIcon
@@ -154,16 +146,6 @@
               class="absolute left-0 right-0 z-10 mx-3 mt-1 origin-top divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
             >
               <div class="py-1">
-                <MenuItem v-slot="{ active }">
-                  <NuxtLink
-                    :to="`${administratorPath}/profile`"
-                    :class="[
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block px-4 py-2 text-sm',
-                    ]"
-                    >View profile</NuxtLink
-                  >
-                </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <NuxtLink
                     :to="`${administratorPath}/setting`"
@@ -273,18 +255,6 @@
                   <div class="py-1">
                     <MenuItem v-slot="{ active }">
                       <NuxtLink
-                        :to="`${administratorPath}/profile`"
-                        :class="[
-                          active
-                            ? 'bg-gray-100 text-gray-900'
-                            : 'text-gray-700',
-                          'block px-4 py-2 text-sm',
-                        ]"
-                        >View profile</NuxtLink
-                      >
-                    </MenuItem>
-                    <MenuItem v-slot="{ active }">
-                      <NuxtLink
                         :to="`${administratorPath}/setting`"
                         :class="[
                           active
@@ -364,7 +334,10 @@ import {
 } from "@heroicons/vue/24/outline";
 import { ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 
+const administratorData = ref<any>({});
+
 const { signOut } = useAuth();
+const { getAdministratorFromToken } = useAdministrator();
 
 const administratorPath = "/administrator";
 const route = useRoute();
@@ -415,6 +388,10 @@ const navigation = [
 ];
 
 const sidebarOpen = ref(false);
+
+onMounted(() => {
+  administratorData.value = getAdministratorFromToken();
+});
 
 watchEffect(() => {
   navigation.forEach((item) => {

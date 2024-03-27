@@ -1,10 +1,10 @@
-import { getAdministratorByEmail } from "../queries/administrator";
+import { getAdministratorFromTokenByEmail } from "../queries/administrator";
 import Bcryptjs from "bcryptjs";
 import { getTeacherByEmail } from "../queries/teacher";
 import { getStudentByEmail } from "../queries/student";
 
 export const loginAsAdministrator = async (email: string, password: string) => {
-  const administratorDB = await getAdministratorByEmail(email);
+  const administratorDB = await getAdministratorFromTokenByEmail(email);
 
   if (!administratorDB) {
     throw new ErrorWithCode(400, "Administrator not found");
