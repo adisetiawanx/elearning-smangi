@@ -9,7 +9,12 @@ export default () => {
     search?: string;
   }) => {
     const { data: respone, error } = await useFetch(
-      `/api/administrator/material?take=${take}&skip=${skip}&search=${search}`
+      `/api/administrator/material?take=${take}&skip=${skip}&search=${search}`,
+      {
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
     );
 
     if (error.value) {
@@ -22,21 +27,39 @@ export default () => {
     }
   };
 
-  const getListMaterialForTeacher = async ({
-    take,
-    skip,
-    search,
-  }: {
-    take: number | undefined;
-    skip: number | undefined;
-    search?: string;
-  }) => {
+  const deleteMaterial = async (id: any) => {
     const { data: respone, error } = await useFetch(
-      `/api/teacher/material?take=${take}&skip=${skip}&search=${search}`
+      `/api/teacher/material/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
     );
 
     if (error.value) {
-      alert(error.value);
+      alert(error.value.message);
+      return;
+    }
+
+    if (respone.value) {
+      return respone.value;
+    }
+  };
+
+  const getMaterialByIdForTeacher = async (id: any) => {
+    const { data: respone, error } = await useFetch(
+      `/api/teacher/material/${id}`,
+      {
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
+    );
+
+    if (error.value) {
+      alert(error.value.message);
       return;
     }
 
@@ -47,6 +70,7 @@ export default () => {
 
   return {
     getListMaterial,
-    getListMaterialForTeacher,
+    deleteMaterial,
+    getMaterialByIdForTeacher,
   };
 };

@@ -3,6 +3,7 @@
     <template #header>List Mata Pelajaran</template>
     <template #content>
       <AddSubjectModal
+        v-if="isOpen"
         :fetch-data-subjects="fetchSubjectList"
         :is-open="isOpen"
         @close="closeAddModal"

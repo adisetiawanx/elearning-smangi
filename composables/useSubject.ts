@@ -96,10 +96,31 @@ export default () => {
     }
   };
 
+  const getSubjectByIdForTeacher = async (id: any) => {
+    const { data: respone, error } = await useFetch(
+      `/api/teacher/subject/${id}`,
+      {
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
+    );
+
+    if (error.value) {
+      alert(error.value);
+      return;
+    }
+
+    if (respone.value) {
+      return respone.value.data;
+    }
+  };
+
   return {
     getListSubjects,
     getSubjectById,
     deleteSubject,
     getListSubjectsForTeacher,
+    getSubjectByIdForTeacher,
   };
 };

@@ -156,6 +156,9 @@ const uploadProfilePicture = async (event: Event) => {
 
   const { data: respone, error } = await useFetch("/api/image", {
     method: "POST",
+    headers: {
+      Authorization: "Bearer " + useCookie("auth:token").value,
+    },
     body: formData,
   });
 

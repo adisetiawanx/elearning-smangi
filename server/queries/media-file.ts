@@ -11,3 +11,11 @@ export const addMediaFile = async (mediaFile: {
     },
   });
 };
+
+export const deleteMediaFile = async (id: string) => {
+  return await Prisma.mediaFile.delete({
+    where: {
+      id,
+    },
+  });
+};

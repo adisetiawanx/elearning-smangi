@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     const createdClass = await addClass({ name, major });
 
     return {
-      mag: "Class created successfully",
+      msg: "Class created successfully",
       data: {
         name: createdClass.name,
       },

@@ -131,3 +131,20 @@ export const deleteTeacher = async (id: string) => {
     },
   });
 };
+
+export const getTeacherById = async (id: string) => {
+  return Prisma.teacher.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      nuptk: true,
+      password: true,
+      phone: true,
+      profile_image: true,
+    },
+  });
+};

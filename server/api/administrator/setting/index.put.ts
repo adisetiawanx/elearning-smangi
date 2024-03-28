@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     });
 
     return {
-      mag: "Administrator updated successfully",
+      msg: "Administrator updated successfully",
       data: administratorDB,
     };
   } catch (error) {

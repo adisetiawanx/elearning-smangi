@@ -3,6 +3,7 @@
     <template #header>List Siswa</template>
     <template #content>
       <AddStudentModal
+        v-if="isOpen"
         :is-open="isOpen"
         :fetch-students-data="fetchStudentsData"
         @close="closeAddModal"

@@ -149,25 +149,20 @@ export const getSubjectForTeacher = async ({
   search?: string | undefined;
   teacher_id: string;
 }) => {
-  let where = {};
-  if (search) {
-    where = {
-      OR: [
-        {
-          name: {
-            contains: search,
-          },
-        },
-      ],
-    };
-  }
-
   return await Prisma.subject.findMany({
     take: take,
     skip: skip,
     where: {
       teacher_id: teacher_id,
-      ...where,
+      OR: [
+        {
+          Class: {
+            name: {
+              contains: search?.toLocaleUpperCase(),
+            },
+          },
+        },
+      ],
     },
     select: {
       id: true,
@@ -182,6 +177,42 @@ export const getSubjectForTeacher = async ({
         select: {
           id: true,
           name: true,
+        },
+      },
+    },
+  });
+};
+
+export const getSubjectByIdForTeacher = async (id: string) => {
+  return await Prisma.subject.findUnique({
+    where: {
+      id: id,
+    },
+    include: {
+      Class: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      Material: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          id: true,
+          title: true,
+          createdAt: true,
+        },
+      },
+      Assignment: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          id: true,
+          title: true,
+          createdAt: true,
         },
       },
     },

@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
     });
 
     return {
-      mag: "Subject created successfully",
+      msg: "Subject created successfully",
       data: {
         name: createdSubject.name,
       },

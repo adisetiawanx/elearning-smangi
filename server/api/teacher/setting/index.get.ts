@@ -1,21 +1,14 @@
-import { getMaterialsForTeacher } from "~/server/queries/material";
+import { getTeacherById } from "~/server/queries/teacher";
 
 export default defineEventHandler(async (event) => {
   try {
     const teacher = await isTeacherServer(event);
 
-    const query = getQuery(event);
-
-    const subjects = await getMaterialsForTeacher({
-      teacher_id: teacher.id,
-      take: Number(query.take) || undefined,
-      skip: Number(query.skip) || undefined,
-      search: String(query.search) || undefined,
-    });
+    const teacherDB = await getTeacherById(teacher.id);
 
     return {
-      msg: "Materials fetched successfully",
-      data: subjects,
+      msg: "Teacher fetched successfully",
+      data: teacherDB,
     };
   } catch (error) {
     if (error instanceof ErrorWithCode) {

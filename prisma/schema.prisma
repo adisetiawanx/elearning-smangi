@@ -60,10 +60,10 @@ model Student {
 
   Class Class? @relation(fields: [class_id], references: [id], onDelete: SetNull)
 
-  StudentAssigmentGrade StudentAssigmentGrade[]
+  StudentAssigment StudentAssigment[]
 }
 
-model StudentAssigmentGrade {
+model StudentAssigment {
   id           String  @id @default(cuid())
   student_id   String?
   assigment_id String?
@@ -110,7 +110,7 @@ model Material {
   id         String  @id @default(cuid())
   title      String
   content    String
-  class_name String?
+  class_id   String?
   subject_id String?
   teacher_id String?
 
@@ -118,7 +118,7 @@ model Material {
   updatedAt DateTime @updatedAt
 
   MediaFile MediaFile[]
-  Class     Class?      @relation(fields: [class_name], references: [id], onDelete: SetNull)
+  Class     Class?      @relation(fields: [class_id], references: [id], onDelete: SetNull)
   Subject   Subject?    @relation(fields: [subject_id], references: [id], onDelete: SetNull)
   Teacher   Teacher?    @relation(fields: [teacher_id], references: [id], onDelete: SetNull)
 }
@@ -130,16 +130,16 @@ model Assignment {
   deadline   DateTime
   subject_id String?
   teacher_id String?
-  class_name String?
+  class_id   String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  MediaFile             MediaFile[]
-  Class                 Class?                  @relation(fields: [class_name], references: [id], onDelete: SetNull)
-  Subject               Subject?                @relation(fields: [subject_id], references: [id], onDelete: SetNull)
-  Teacher               Teacher?                @relation(fields: [teacher_id], references: [id], onDelete: SetNull)
-  StudentAssigmentGrade StudentAssigmentGrade[]
+  MediaFile        MediaFile[]
+  Class            Class?             @relation(fields: [class_id], references: [id], onDelete: SetNull)
+  Subject          Subject?           @relation(fields: [subject_id], references: [id], onDelete: SetNull)
+  Teacher          Teacher?           @relation(fields: [teacher_id], references: [id], onDelete: SetNull)
+  StudentAssigment StudentAssigment[]
 }
 
 model MediaFile {

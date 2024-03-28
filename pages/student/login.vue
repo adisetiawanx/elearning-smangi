@@ -12,13 +12,6 @@
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <el-alert
-        v-if="loginStatus.error"
-        :title="loginStatus.error"
-        type="error"
-        show-icon
-        @close="() => (loginStatus.error = '')"
-      />
       <form class="space-y-6" @submit.prevent="loginHandler">
         <div>
           <label

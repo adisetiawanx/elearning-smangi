@@ -114,17 +114,22 @@
                   class="flex min-w-0 items-center justify-between space-x-3"
                 >
                   <img
+                    v-if="administratorData.profile_image"
                     class="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
                     :src="administratorData.profile_image"
                     alt=""
                   />
                   <span class="flex min-w-0 flex-1 flex-col">
-                    <span class="truncate text-sm font-medium text-gray-900">{{
-                      administratorData.name
-                    }}</span>
-                    <span class="truncate text-sm text-gray-500">{{
-                      administratorData.email
-                    }}</span>
+                    <span
+                      v-if="administratorData.name"
+                      class="truncate text-sm font-medium text-gray-900"
+                      >{{ administratorData.name }}</span
+                    >
+                    <span
+                      v-if="administratorData.email"
+                      class="truncate text-sm text-gray-500"
+                      >{{ administratorData.email }}</span
+                    >
                   </span>
                 </span>
                 <ChevronUpDownIcon
@@ -148,7 +153,7 @@
               <div class="py-1">
                 <MenuItem v-slot="{ active }">
                   <NuxtLink
-                    :to="`${administratorPath}/setting`"
+                    :to="`${teacherPath}/setting`"
                     :class="[
                       active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                       'block px-4 py-2 text-sm',
@@ -163,7 +168,7 @@
                     @click="
                       () =>
                         signOut({
-                          callbackUrl: '/student/login',
+                          callbackUrl: '/teacher/login',
                         })
                     "
                     href="#"
@@ -255,7 +260,7 @@
                   <div class="py-1">
                     <MenuItem v-slot="{ active }">
                       <NuxtLink
-                        :to="`${administratorPath}/setting`"
+                        :to="`${teacherPath}/setting`"
                         :class="[
                           active
                             ? 'bg-gray-100 text-gray-900'
@@ -272,7 +277,7 @@
                         @click="
                           () =>
                             signOut({
-                              callbackUrl: '/student/login',
+                              callbackUrl: '/teacher/login',
                             })
                         "
                         href="#"
@@ -324,37 +329,30 @@ import {
 import {
   Bars3CenterLeftIcon,
   XMarkIcon,
-  DocumentChartBarIcon,
-  DocumentTextIcon,
-  ClipboardIcon,
+  DocumentDuplicateIcon,
+  BuildingLibraryIcon,
 } from "@heroicons/vue/24/outline";
 import { ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 
 const administratorData = ref<any>({});
 
 const { signOut } = useAuth();
-const { getAdministratorFromToken } = useAdministrator();
+const { getTeacherFromToken } = useTeacher();
 
-const administratorPath = "/administrator";
+const teacherPath = "/teacher";
 const route = useRoute();
 
 const navigation = [
   {
-    name: "Mata Pelajaran",
-    href: `${administratorPath}/mata-pelajaran`,
-    icon: ClipboardIcon,
+    name: "Kelas",
+    href: `${teacherPath}/kelas`,
+    icon: BuildingLibraryIcon,
     current: false,
   },
   {
-    name: "Materi",
-    href: `${administratorPath}/materi`,
-    icon: DocumentChartBarIcon,
-    current: false,
-  },
-  {
-    name: "Tugas",
-    href: `${administratorPath}/tugas`,
-    icon: DocumentTextIcon,
+    name: "Tugas Siswa",
+    href: `${teacherPath}/student-assignment`,
+    icon: DocumentDuplicateIcon,
     current: false,
   },
 ];
@@ -362,7 +360,7 @@ const navigation = [
 const sidebarOpen = ref(false);
 
 onMounted(() => {
-  administratorData.value = getAdministratorFromToken();
+  administratorData.value = getTeacherFromToken();
 });
 
 watchEffect(() => {

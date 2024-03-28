@@ -3,6 +3,7 @@
     <template #header>List Guru</template>
     <template #content>
       <AddTeacherModal
+        v-if="isOpen"
         :fetch-teachers-data="fetchTeachersData"
         :is-open="isOpen"
         @close="closeAddModal"

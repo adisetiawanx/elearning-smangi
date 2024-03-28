@@ -14,14 +14,10 @@
       @close="closeModal"
       class="relative z-50"
     >
-      <!-- The backdrop, rendered as a fixed sibling to the panel container -->
       <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
 
-      <!-- Full-screen scrollable container -->
       <div class="fixed inset-0 w-screen overflow-y-auto">
-        <!-- Container to center the panel -->
         <div class="flex min-h-full items-center justify-center p-4">
-          <!-- The actual dialog panel -->
           <HeadlessDialogPanel class="w-full max-w-xl rounded bg-white p-5">
             <HeadlessDialogTitle class="border-b pb-3 font-medium text-lg"
               >Hapus mata pelajaran</HeadlessDialogTitle

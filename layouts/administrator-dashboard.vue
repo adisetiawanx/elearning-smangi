@@ -114,17 +114,22 @@
                   class="flex min-w-0 items-center justify-between space-x-3"
                 >
                   <img
+                    v-if="administratorData.profile_image"
                     class="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
                     :src="administratorData.profile_image"
                     alt=""
                   />
                   <span class="flex min-w-0 flex-1 flex-col">
-                    <span class="truncate text-sm font-medium text-gray-900">{{
-                      administratorData.name
-                    }}</span>
-                    <span class="truncate text-sm text-gray-500">{{
-                      administratorData.email
-                    }}</span>
+                    <span
+                      v-if="administratorData.name"
+                      class="truncate text-sm font-medium text-gray-900"
+                      >{{ administratorData.name }}</span
+                    >
+                    <span
+                      v-if="administratorData.email"
+                      class="truncate text-sm text-gray-500"
+                      >{{ administratorData.email }}</span
+                    >
                   </span>
                 </span>
                 <ChevronUpDownIcon

@@ -14,5 +14,12 @@ export async function handleUploadImage(file: string) {
   });
   return res;
 }
+export async function handleUploadAnything(file: string, format: string) {
+  const res = await cloudinary.uploader.upload(file, {
+    resource_type: "raw",
+    format,
+  });
+  return res;
+}
 
 export default cloudinary;

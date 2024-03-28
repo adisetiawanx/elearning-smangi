@@ -14,20 +14,15 @@
       @close="closeModal"
       class="relative z-50"
     >
-      <!-- The backdrop, rendered as a fixed sibling to the panel container -->
       <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
 
-      <!-- Full-screen scrollable container -->
       <div class="fixed inset-0 w-screen overflow-y-auto">
-        <!-- Container to center the panel -->
         <div class="flex min-h-full items-center justify-center p-4">
-          <!-- The actual dialog panel -->
           <HeadlessDialogPanel class="w-full max-w-5xl rounded bg-white p-5">
             <HeadlessDialogTitle class="border-b pb-3 font-medium text-lg"
               >Tambahkan Siswa Baru</HeadlessDialogTitle
             >
 
-            <!-- Form for adding Siswa -->
             <form @submit.prevent="addStudent" class="mt-3">
               <div class="mb-4">
                 <label
@@ -219,6 +214,9 @@ const uploadProfilePicture = async (event: Event) => {
 
   const { data: respone, error } = await useFetch("/api/image", {
     method: "POST",
+    headers: {
+      Authorization: "Bearer " + useCookie("auth:token").value,
+    },
     body: formData,
   });
 
@@ -252,6 +250,9 @@ const addStudent = async () => {
 
   const { error } = await useFetch("/api/administrator/student", {
     method: "POST",
+    headers: {
+      Authorization: "Bearer " + useCookie("auth:token").value,
+    },
     body: {
       email: student.value.email,
       password: student.value.password,
@@ -276,6 +277,7 @@ onMounted(async () => {
   listKelas.value = await getListKelas({
     take: undefined,
     skip: 0,
+    search: "",
   });
 });
 </script>

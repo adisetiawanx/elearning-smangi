@@ -114,17 +114,22 @@
                   class="flex min-w-0 items-center justify-between space-x-3"
                 >
                   <img
+                    v-if="studentData.profile_image"
                     class="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
-                    :src="teacherData.profile_image"
+                    :src="studentData.profile_image"
                     alt=""
                   />
                   <span class="flex min-w-0 flex-1 flex-col">
-                    <span class="truncate text-sm font-medium text-gray-900">{{
-                      teacherData.name
-                    }}</span>
-                    <span class="truncate text-sm text-gray-500">{{
-                      teacherData.email
-                    }}</span>
+                    <span
+                      v-if="studentData.name"
+                      class="truncate text-sm font-medium text-gray-900"
+                      >{{ studentData.name }}</span
+                    >
+                    <span
+                      v-if="studentData.email"
+                      class="truncate text-sm text-gray-500"
+                      >{{ studentData.email }}</span
+                    >
                   </span>
                 </span>
                 <ChevronUpDownIcon
@@ -148,7 +153,7 @@
               <div class="py-1">
                 <MenuItem v-slot="{ active }">
                   <NuxtLink
-                    :to="`${teacherPath}/setting`"
+                    :to="`${studentPath}/setting`"
                     :class="[
                       active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                       'block px-4 py-2 text-sm',
@@ -255,7 +260,7 @@
                   <div class="py-1">
                     <MenuItem v-slot="{ active }">
                       <NuxtLink
-                        :to="`${teacherPath}/setting`"
+                        :to="`${studentPath}/setting`"
                         :class="[
                           active
                             ? 'bg-gray-100 text-gray-900'
@@ -330,30 +335,30 @@ import {
 } from "@heroicons/vue/24/outline";
 import { ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 
-const teacherData = ref<any>({});
+const studentData = ref<any>({});
 
 const { signOut } = useAuth();
-const { getAdministratorFromToken } = useAdministrator();
+const { getStudentFromToken } = useStudent();
 
-const teacherPath = "/teacher";
+const studentPath = "/student";
 const route = useRoute();
 
 const navigation = [
   {
     name: "Mata Pelajaran",
-    href: `${teacherPath}/mata-pelajaran`,
+    href: `${studentPath}/mata-pelajaran`,
     icon: ClipboardIcon,
     current: false,
   },
   {
     name: "Materi",
-    href: `${teacherPath}/materi`,
+    href: `${studentPath}/materi`,
     icon: DocumentChartBarIcon,
     current: false,
   },
   {
     name: "Tugas",
-    href: `${teacherPath}/tugas`,
+    href: `${studentPath}/tugas`,
     icon: DocumentTextIcon,
     current: false,
   },
@@ -362,7 +367,7 @@ const navigation = [
 const sidebarOpen = ref(false);
 
 onMounted(() => {
-  teacherData.value = getAdministratorFromToken();
+  studentData.value = getStudentFromToken();
 });
 
 watchEffect(() => {

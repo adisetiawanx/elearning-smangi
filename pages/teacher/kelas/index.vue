@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout name="teacher-dashboard">
-    <template #header>List Mata Pelajaran</template>
+    <template #header>List Kelas & Mata Pelajaran</template>
     <template #content>
       <div class="mb-3 mt-3 mx-7">
         <label for="search" class="sr-only">Search</label>
@@ -12,7 +12,7 @@
             name="search"
             id="search"
             class="block w-full pl-6 pr-3 py-2 border border-gray-300 rounded leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            placeholder="Cari mata pelajaran..."
+            placeholder="Cari kelas..."
           />
         </div>
       </div>
@@ -30,22 +30,26 @@
             class="group flex items-center justify-between px-4 py-3 hover:bg-gray-50 sm:px-6 text-sm text-center"
           >
             <span class="flex-1 truncate font-medium text-left">
-              {{ subject.name }}
-            </span>
-
-            <span lass="flex-1 truncate">
               {{ subject.Class?.name || "" }}
             </span>
 
-            <span class="flex-1 truncate">
-              {{ subject.Teacher?.name || "" }}
+            <span lass="flex-1 truncate">
+              {{ subject.name }}
             </span>
+
+            <div class="flex-1 flex justify-end gap-2">
+              <NuxtLink :to="`/teacher/kelas/${subject.id}`">
+                <EyeIcon
+                  class="w-6 bg-primary p-0.5 rounded shadow text-white cursor-pointer"
+                />
+              </NuxtLink>
+            </div>
           </div>
         </li>
       </ul>
       <Spinner v-else-if="fetchSubjectDataStatus.isLoading" />
       <p v-else class="mx-7 text-gray-500 text-sm">
-        Tidak ada mata pelajaran yang tersedia.
+        Tidak ada kelas & mata pelajaran yang tersedia.
       </p>
 
       <!-- Pagination -->
@@ -88,7 +92,11 @@
 <script lang="ts" setup>
 // @ts-ignore
 import { debounce } from "lodash";
-import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/vue/24/outline";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  EyeIcon,
+} from "@heroicons/vue/24/outline";
 
 const route = useRoute();
 const page = route.query.page ? Number(route.query.page) : 1;

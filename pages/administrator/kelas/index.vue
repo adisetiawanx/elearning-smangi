@@ -3,6 +3,7 @@
     <template #header>List Kelas</template>
     <template #content>
       <AddClassModal
+        v-if="isOpen"
         :fetch-data-kelas="fetchKelasList"
         :is-open="isOpen"
         @close="closeAddModal"

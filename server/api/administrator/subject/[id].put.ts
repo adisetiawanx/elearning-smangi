@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
     const createdClass = await updateSubject({ id, name, classId, teacherId });
 
     return {
-      mag: "Subject updated successfully",
+      msg: "Subject updated successfully",
       data: createdClass,
     };
   } catch (error) {

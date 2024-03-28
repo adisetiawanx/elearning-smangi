@@ -14,20 +14,15 @@
       @close="closeModal"
       class="relative z-50"
     >
-      <!-- The backdrop, rendered as a fixed sibling to the panel container -->
       <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
 
-      <!-- Full-screen scrollable container -->
       <div class="fixed inset-0 w-screen overflow-y-auto">
-        <!-- Container to center the panel -->
         <div class="flex min-h-full items-center justify-center p-4">
-          <!-- The actual dialog panel -->
           <HeadlessDialogPanel class="w-full max-w-xl rounded bg-white p-5">
             <HeadlessDialogTitle class="border-b pb-3 font-medium text-lg"
               >Tambahkan Mata Pelajaran Baru</HeadlessDialogTitle
             >
 
-            <!-- Form for adding Siswa -->
             <form @submit.prevent="addSubject" class="mt-3">
               <div class="mb-4">
                 <label
@@ -140,6 +135,9 @@ const addSubject = async () => {
     "/api/administrator/subject",
     {
       method: "POST",
+      headers: {
+        Authorization: "Bearer " + useCookie("auth:token").value,
+      },
       body: {
         name: subject.value.name,
         class_id: subject.value.classId,
