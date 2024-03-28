@@ -2,7 +2,6 @@ import { getAdministratorById } from "~/server/queries/administrator";
 
 export default defineEventHandler(async (event) => {
   try {
-    console.info("asdasdas");
     const administrator = await isAdministratorServer(event);
 
     const administratorDB = await getAdministratorById(administrator.id);

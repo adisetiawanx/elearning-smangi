@@ -1,5 +1,6 @@
 import Prisma from "~/configs/db";
 
+// Administrator
 export const getSubject = async ({
   take,
   skip,
@@ -132,6 +133,57 @@ export const deleteSubject = async (id: string) => {
   return Prisma.subject.delete({
     where: {
       id,
+    },
+  });
+};
+
+//Teacher
+export const getSubjectForTeacher = async ({
+  take,
+  skip,
+  search,
+  teacher_id,
+}: {
+  take: number | undefined;
+  skip: number | undefined;
+  search?: string | undefined;
+  teacher_id: string;
+}) => {
+  let where = {};
+  if (search) {
+    where = {
+      OR: [
+        {
+          name: {
+            contains: search,
+          },
+        },
+      ],
+    };
+  }
+
+  return await Prisma.subject.findMany({
+    take: take,
+    skip: skip,
+    where: {
+      teacher_id: teacher_id,
+      ...where,
+    },
+    select: {
+      id: true,
+      name: true,
+      Class: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      Teacher: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   });
 };

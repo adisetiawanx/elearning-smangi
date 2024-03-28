@@ -94,18 +94,19 @@ const loginHandler = async () => {
         password: userInput.value.password,
         loginType: "student",
       },
-      { callbackUrl: "/" }
+      { callbackUrl: "/student" }
     );
   } catch (error) {
     if (error instanceof Error) {
       loginStatus.value.error = error.message;
+      alert(error.message);
     }
   } finally {
     loginStatus.value.isLoading = false;
   }
 };
 
-// definePageMeta({
-//   middleware: "authenticated",
-// });
+definePageMeta({
+  middleware: "is-student-login",
+});
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="student-dashboard">
+  <NuxtLayout name="teacher-dashboard">
     <template #header>Home</template>
     <template #content>
       <!-- Materi list -->
@@ -99,6 +99,6 @@ const assignments = ref([
 ]);
 
 definePageMeta({
-  middleware: "is-student",
+  middleware: "is-teacher",
 });
 </script>

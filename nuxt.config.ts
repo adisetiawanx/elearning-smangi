@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   modules: [
     "@nuxtjs/tailwindcss",
     "@sidebase/nuxt-auth",
@@ -19,7 +19,7 @@ export default defineNuxtConfig({
   ssr: false,
   routeRules: {
     "/": {
-      redirect: "/administrator",
+      redirect: "/student",
     },
     "/login": {
       redirect: "/student/login",

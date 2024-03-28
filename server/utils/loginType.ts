@@ -35,9 +35,7 @@ export const loginAsTeacher = async (email: string, password: string) => {
     throw new ErrorWithCode(400, "Teacher not found");
   }
 
-  const isPasswordMatch = await Bcryptjs.compare(password, teacherDB.password);
-
-  if (!isPasswordMatch) {
+  if (password !== teacherDB.password) {
     throw new ErrorWithCode(400, "Password is incorrect");
   }
 
@@ -57,9 +55,7 @@ export const loginAsStudent = async (email: string, password: string) => {
     throw new ErrorWithCode(400, "Student not found");
   }
 
-  const isPasswordMatch = await Bcryptjs.compare(password, studentDB.password);
-
-  if (!isPasswordMatch) {
+  if (password !== studentDB.password) {
     throw new ErrorWithCode(400, "Password is incorrect");
   }
 
