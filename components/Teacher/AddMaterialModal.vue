@@ -46,6 +46,7 @@
                 >
                 <textarea
                   type="text"
+                  spellcheck="false"
                   id="description"
                   v-model="material.content"
                   class="min-h-[400px] mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"

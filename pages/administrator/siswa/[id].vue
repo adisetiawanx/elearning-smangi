@@ -227,6 +227,7 @@ onMounted(async () => {
   listKelas.value = await getListKelas({
     take: undefined,
     skip: 0,
+    search: "",
   });
 });
 

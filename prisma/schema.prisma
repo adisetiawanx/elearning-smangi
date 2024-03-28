@@ -65,13 +65,16 @@ model Student {
 
 model StudentAssigment {
   id           String  @id @default(cuid())
+  description  String?
+  grade        Int?
+  proof_image  String?
   student_id   String?
   assigment_id String?
-  grade        Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  MediaFile MediaFile[]
   Student   Student?    @relation(fields: [student_id], references: [id], onDelete: SetNull)
   Assigment Assignment? @relation(fields: [assigment_id], references: [id], onDelete: SetNull)
 }
@@ -150,6 +153,7 @@ model MediaFile {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Material   Material[]
-  Assignment Assignment[]
+  Material         Material[]
+  Assignment       Assignment[]
+  StudentAssigment StudentAssigment[]
 }

@@ -218,3 +218,85 @@ export const getSubjectByIdForTeacher = async (id: string) => {
     },
   });
 };
+
+//Student
+
+export const getSubjectForStudent = async ({
+  take,
+  skip,
+  search,
+  classId,
+}: {
+  take: number | undefined;
+  skip: number | undefined;
+  search?: string | undefined;
+  classId: string;
+}) => {
+  let where = {};
+  if (search) {
+    where = {
+      OR: [
+        {
+          name: {
+            contains: search,
+          },
+        },
+      ],
+    };
+  }
+
+  return await Prisma.subject.findMany({
+    take: take,
+    skip: skip,
+    where: {
+      class_id: classId,
+      ...where,
+    },
+    select: {
+      id: true,
+      name: true,
+      Teacher: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+};
+
+export const getSubjectByIdForStudent = async (id: string) => {
+  return await Prisma.subject.findUnique({
+    where: {
+      id: id,
+    },
+    include: {
+      Class: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      Material: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          id: true,
+          title: true,
+          createdAt: true,
+        },
+      },
+      Assignment: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          id: true,
+          title: true,
+          createdAt: true,
+        },
+      },
+    },
+  });
+};

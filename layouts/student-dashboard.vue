@@ -329,8 +329,6 @@ import {
 import {
   Bars3CenterLeftIcon,
   XMarkIcon,
-  DocumentChartBarIcon,
-  DocumentTextIcon,
   ClipboardIcon,
 } from "@heroicons/vue/24/outline";
 import { ChevronUpDownIcon } from "@heroicons/vue/20/solid";
@@ -348,18 +346,6 @@ const navigation = [
     name: "Mata Pelajaran",
     href: `${studentPath}/mata-pelajaran`,
     icon: ClipboardIcon,
-    current: false,
-  },
-  {
-    name: "Materi",
-    href: `${studentPath}/materi`,
-    icon: DocumentChartBarIcon,
-    current: false,
-  },
-  {
-    name: "Tugas",
-    href: `${studentPath}/tugas`,
-    icon: DocumentTextIcon,
     current: false,
   },
 ];

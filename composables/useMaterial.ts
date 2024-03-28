@@ -68,9 +68,30 @@ export default () => {
     }
   };
 
+  const getMaterialByIdForStudent = async (id: any) => {
+    const { data: respone, error } = await useFetch(
+      `/api/student/material/${id}`,
+      {
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
+    );
+
+    if (error.value) {
+      alert(error.value.message);
+      return;
+    }
+
+    if (respone.value) {
+      return respone.value.data;
+    }
+  };
+
   return {
     getListMaterial,
     deleteMaterial,
     getMaterialByIdForTeacher,
+    getMaterialByIdForStudent,
   };
 };

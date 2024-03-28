@@ -68,9 +68,73 @@ export default () => {
     }
   };
 
+  const getAssignmentByIdForStudent = async (id: any) => {
+    const { data: respone, error } = await useFetch(
+      `/api/student/assignment/${id}`,
+      {
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
+    );
+
+    if (error.value) {
+      alert(error.value.message);
+      return;
+    }
+
+    if (respone.value) {
+      return respone.value.data;
+    }
+  };
+
+  const getSubmittedAssignmentForStudent = async (id: any) => {
+    const { data: respone, error } = await useFetch(
+      `/api/student/submit-assignment/${id}`,
+      {
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
+    );
+
+    if (error.value) {
+      alert(error.value.message);
+      return;
+    }
+
+    if (respone.value) {
+      return respone.value.data;
+    }
+  };
+
+  const deleteSubmittedAssignmentForStudent = async (id: any) => {
+    const { data: respone, error } = await useFetch(
+      `/api/student/submit-assignment/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
+    );
+
+    if (error.value) {
+      alert(error.value.message);
+      return;
+    }
+
+    if (respone.value) {
+      return respone.value;
+    }
+  };
+
   return {
     getListAssignment,
     deleteAssignment,
     getAssignmentByIdForTeacher,
+    getAssignmentByIdForStudent,
+    getSubmittedAssignmentForStudent,
+    deleteSubmittedAssignmentForStudent,
   };
 };

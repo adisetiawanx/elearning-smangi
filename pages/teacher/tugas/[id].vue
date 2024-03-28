@@ -213,4 +213,8 @@ const fetchMaterialData = async () => {
 onMounted(async () => {
   await fetchMaterialData();
 });
+
+definePageMeta({
+  middleware: "is-teacher",
+});
 </script>
