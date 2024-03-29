@@ -60,7 +60,7 @@
         </div>
 
         <div class="flex justify-end gap-3 mt-5 border-t pt-3">
-          <Spinner v-if="updateSubjectStatus.isLoading" />
+          <UISpinner v-if="updateSubjectStatus.isLoading" />
           <button
             v-else
             type="submit"
@@ -149,5 +149,9 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "is-administrator",
+});
+
+useHead({
+  title: "Edit Mata Pelajaran",
 });
 </script>

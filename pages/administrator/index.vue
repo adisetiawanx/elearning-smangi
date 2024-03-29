@@ -12,8 +12,8 @@
           class="mt-3 divide-y divide-gray-100 border-t border-gray-200"
         >
           <li v-for="material in materials" :key="material.id">
-            <a
-              href="#"
+            <NuxtLink
+              to="/administrator/materi"
               class="group flex items-center justify-between px-4 py-2.5 hover:bg-gray-50 sm:px-6"
             >
               <span class="flex items-center space-x-3 truncate">
@@ -31,7 +31,7 @@
                 class="ml-4 h-5 w-5 text-gray-400 group-hover:text-gray-500"
                 aria-hidden="true"
               />
-            </a>
+            </NuxtLink>
           </li>
         </ul>
       </div>
@@ -46,8 +46,8 @@
           class="mt-3 divide-y divide-gray-100 border-t border-gray-200"
         >
           <li v-for="assignment in assignments" :key="assignment.id">
-            <a
-              href="#"
+            <NuxtLink
+              to="/administrator/tugas"
               class="group flex items-center justify-between px-4 py-2.5 hover:bg-gray-50 sm:px-6"
             >
               <span class="flex items-center space-x-3 truncate">
@@ -65,7 +65,7 @@
                 class="ml-4 h-5 w-5 text-gray-400 group-hover:text-gray-500"
                 aria-hidden="true"
               />
-            </a>
+            </NuxtLink>
           </li>
         </ul>
       </div>
@@ -76,29 +76,23 @@
 <script setup lang="ts">
 import { ChevronRightIcon } from "@heroicons/vue/20/solid";
 
-const materials = ref([
-  {
-    id: 1,
-    title: "Materi Bab 3",
-  },
-  {
-    id: 2,
-    title: "Materi Bab 4",
-  },
-]);
+const { getRecentForAdmin } = useRecent();
 
-const assignments = ref([
-  {
-    id: 1,
-    title: "Membuat kesimpulan pada bab 3",
-  },
-  {
-    id: 1,
-    title: "Menambahkan materi cara membuat paragraph",
-  },
-]);
+const materials = ref<any>([]);
+
+const assignments = ref<any>([]);
+
+onMounted(async () => {
+  const respone = await getRecentForAdmin();
+  materials.value = respone?.recentMaterials;
+  assignments.value = respone?.recentAssignments;
+});
 
 definePageMeta({
   middleware: "is-administrator",
+});
+
+useHead({
+  title: "Dashboard",
 });
 </script>

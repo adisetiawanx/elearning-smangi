@@ -74,7 +74,7 @@
                   class="block text-sm font-medium text-gray-700"
                   >Files</label
                 >
-                <Spinner v-if="isUploadFiles" class="mt-1" />
+                <UISpinner v-if="isUploadFiles" class="mt-1" />
                 <input
                   v-else
                   @change="uploadFiles"

@@ -3,7 +3,7 @@
     <template #header>
       <span>
         <ArrowLeftIcon
-          @click="navigateTo('/administrator/siswa')"
+          @click="router.go(-1)"
           class="w-5 text-gray-500 cursor-pointer"
         />
       </span>
@@ -103,7 +103,7 @@
           />
         </div>
         <div class="mb-4">
-          <Spinner v-if="isUploadProfilePicture" />
+          <UISpinner v-if="isUploadProfilePicture" />
           <NuxtImg
             v-else-if="studentData.profile_image && !isUploadProfilePicture"
             :src="studentData.profile_image"
@@ -113,7 +113,7 @@
           />
         </div>
         <div class="flex justify-end gap-3 mt-5 border-t pt-3">
-          <Spinner v-if="updateStudentStatus.isLoading" />
+          <UISpinner v-if="updateStudentStatus.isLoading" />
           <button
             v-else
             :disabled="isUploadProfilePicture"
@@ -135,6 +135,7 @@ const studentData = ref<any>({});
 
 const { getStudentById } = useStudent();
 const { getListKelas } = useKelas();
+const router = useRouter();
 
 const route = useRoute();
 const studentId = route.params.id;
@@ -177,7 +178,6 @@ const uploadProfilePicture = async (event: Event) => {
 
 const updateStudent = async () => {
   updateStudentStatus.value.isLoading = true;
-  console.log(studentData.value);
   if (
     !studentData.value.email ||
     !studentData.value.password ||
@@ -233,5 +233,9 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "is-administrator",
+});
+
+useHead({
+  title: "Edit Siswa",
 });
 </script>

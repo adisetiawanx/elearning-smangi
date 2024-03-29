@@ -63,6 +63,7 @@ export const getClasses = async ({
         {
           name: {
             contains: search,
+            mode: "insensitive",
           },
         },
       ],
@@ -73,6 +74,9 @@ export const getClasses = async ({
     take: take,
     skip: skip,
     where,
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 };
 

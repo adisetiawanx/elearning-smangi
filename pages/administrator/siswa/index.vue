@@ -2,7 +2,7 @@
   <NuxtLayout name="administrator-dashboard">
     <template #header>List Siswa</template>
     <template #content>
-      <AddStudentModal
+      <AdministratorAddStudentModal
         v-if="isOpen"
         :is-open="isOpen"
         :fetch-students-data="fetchStudentsData"
@@ -41,7 +41,7 @@
             'border-t',
           ]"
         >
-          <DeleteStudentModal
+          <AdministratorDeleteStudentModal
             :id="student.id"
             :isOpen="isOpenDeleteModal"
             :fetch-data-student="fetchStudentsData"
@@ -72,7 +72,7 @@
           </div>
         </li>
       </ul>
-      <Spinner v-else-if="fetchStudentDataStatus.isLoading" />
+      <UISpinner v-else-if="fetchStudentDataStatus.isLoading" />
       <p v-else class="mx-7 text-gray-500 text-sm">
         Tidak ada siswa yang tersedia.
       </p>
@@ -178,5 +178,9 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "is-administrator",
+});
+
+useHead({
+  title: "Siswa",
 });
 </script>

@@ -102,4 +102,8 @@ const loginHandler = async () => {
 definePageMeta({
   middleware: "is-student-login",
 });
+
+useHead({
+  title: "Login Siswa",
+});
 </script>

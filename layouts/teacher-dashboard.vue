@@ -329,7 +329,7 @@ import {
 import {
   Bars3CenterLeftIcon,
   XMarkIcon,
-  DocumentDuplicateIcon,
+  HomeIcon,
   BuildingLibraryIcon,
 } from "@heroicons/vue/24/outline";
 import { ChevronUpDownIcon } from "@heroicons/vue/20/solid";
@@ -344,15 +344,15 @@ const route = useRoute();
 
 const navigation = [
   {
-    name: "Kelas",
-    href: `${teacherPath}/kelas`,
-    icon: BuildingLibraryIcon,
+    name: "Home",
+    href: `${teacherPath}`,
+    icon: HomeIcon,
     current: false,
   },
   {
-    name: "Tugas Siswa",
-    href: `${teacherPath}/student-assignment`,
-    icon: DocumentDuplicateIcon,
+    name: "Kelas",
+    href: `${teacherPath}/kelas`,
+    icon: BuildingLibraryIcon,
     current: false,
   },
 ];

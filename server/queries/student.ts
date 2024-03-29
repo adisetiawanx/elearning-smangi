@@ -24,21 +24,25 @@ export const getStudents = async ({
         {
           email: {
             contains: search,
+            mode: "insensitive",
           },
         },
         {
           name: {
             contains: search,
+            mode: "insensitive",
           },
         },
         {
           nis: {
             contains: search,
+            mode: "insensitive",
           },
         },
         {
           phone: {
             contains: search,
+            mode: "insensitive",
           },
         },
       ],
@@ -58,6 +62,9 @@ export const getStudents = async ({
           name: true,
         },
       },
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 };

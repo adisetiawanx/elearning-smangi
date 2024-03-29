@@ -152,18 +152,6 @@
             >
               <div class="py-1">
                 <MenuItem v-slot="{ active }">
-                  <NuxtLink
-                    :to="`${studentPath}/setting`"
-                    :class="[
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block px-4 py-2 text-sm',
-                    ]"
-                    >Settings</NuxtLink
-                  >
-                </MenuItem>
-              </div>
-              <div class="py-1">
-                <MenuItem v-slot="{ active }">
                   <button
                     @click="
                       () =>
@@ -259,20 +247,6 @@
                 >
                   <div class="py-1">
                     <MenuItem v-slot="{ active }">
-                      <NuxtLink
-                        :to="`${studentPath}/setting`"
-                        :class="[
-                          active
-                            ? 'bg-gray-100 text-gray-900'
-                            : 'text-gray-700',
-                          'block px-4 py-2 text-sm',
-                        ]"
-                        >Settings</NuxtLink
-                      >
-                    </MenuItem>
-                  </div>
-                  <div class="py-1">
-                    <MenuItem v-slot="{ active }">
                       <button
                         @click="
                           () =>
@@ -330,6 +304,7 @@ import {
   Bars3CenterLeftIcon,
   XMarkIcon,
   ClipboardIcon,
+  HomeIcon,
 } from "@heroicons/vue/24/outline";
 import { ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 
@@ -342,6 +317,12 @@ const studentPath = "/student";
 const route = useRoute();
 
 const navigation = [
+  {
+    name: "Home",
+    href: `${studentPath}`,
+    icon: HomeIcon,
+    current: false,
+  },
   {
     name: "Mata Pelajaran",
     href: `${studentPath}/mata-pelajaran`,

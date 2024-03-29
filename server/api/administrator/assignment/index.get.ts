@@ -7,6 +7,7 @@ export default defineEventHandler(async (event) => {
     const assignments = await getAssignments({
       take: Number(query.take) || undefined,
       skip: Number(query.skip) || undefined,
+      search: String(query.search) || undefined,
     });
 
     return {

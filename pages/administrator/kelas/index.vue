@@ -2,7 +2,7 @@
   <NuxtLayout name="administrator-dashboard">
     <template #header>List Kelas</template>
     <template #content>
-      <AddClassModal
+      <AdministratorAddClassModal
         v-if="isOpen"
         :fetch-data-kelas="fetchKelasList"
         :is-open="isOpen"
@@ -39,7 +39,7 @@
             'border-t',
           ]"
         >
-          <DeleteClassModal
+          <AdministratorDeleteClassModal
             :id="kelas.id"
             :is-open="isOpenDeleteModal"
             :fetch-data-class="fetchKelasList"
@@ -69,7 +69,7 @@
           </div>
         </li>
       </ul>
-      <Spinner v-else-if="fetchClassDataStatus.isLoading" />
+      <UISpinner v-else-if="fetchClassDataStatus.isLoading" />
       <p v-else class="mx-7 text-gray-500 text-sm">
         Tidak ada kelas yang tersedia.
       </p>
@@ -120,7 +120,6 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
 } from "@heroicons/vue/24/outline";
-import AddClassModal from "~/components/AddClassModal.vue";
 
 const route = useRoute();
 const page = route.query.page ? Number(route.query.page) : 1;
@@ -172,5 +171,9 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "is-administrator",
+});
+
+useHead({
+  title: "Kelas",
 });
 </script>

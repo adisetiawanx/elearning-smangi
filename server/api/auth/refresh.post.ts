@@ -1,5 +1,4 @@
 import { verify } from "jsonwebtoken";
-import { REFRESH_TOKEN_SECRET } from "../../../configs/env";
 
 interface UserJWTPayload {
   id: string;
@@ -20,9 +19,10 @@ export default eventHandler(async (event) => {
     });
   }
 
-  const decoded = verify(body.refreshToken, REFRESH_TOKEN_SECRET) as
-    | UserJWTPayload
-    | undefined;
+  const decoded = verify(
+    body.refreshToken,
+    process.env.REFRESH_TOKEN_SECRET as string
+  ) as UserJWTPayload | undefined;
 
   if (!decoded) {
     throw createError({

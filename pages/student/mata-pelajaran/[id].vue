@@ -3,7 +3,7 @@
     <template #header
       ><span>
         <ArrowLeftIcon
-          @click="navigateTo('/student/mata-pelajaran')"
+          @click="router.go(-1)"
           class="w-5 text-gray-500 cursor-pointer"
         />
       </span>
@@ -123,7 +123,7 @@
 <script lang="ts" setup>
 import { EyeIcon, ArrowLeftIcon } from "@heroicons/vue/24/outline";
 const { getSubjectByIdForStudent } = useSubject();
-
+const router = useRouter();
 const subjectData = ref<any>({});
 
 const route = useRoute();
@@ -133,11 +133,15 @@ const fetchSubjectData = async () => {
   subjectData.value = await getSubjectByIdForStudent(subjectId);
 };
 
+onMounted(async () => {
+  await fetchSubjectData();
+});
+
 definePageMeta({
   middleware: "is-student",
 });
 
-onMounted(async () => {
-  await fetchSubjectData();
+useHead({
+  title: "Detail Mata Pelajaran",
 });
 </script>

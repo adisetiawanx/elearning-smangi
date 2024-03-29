@@ -3,7 +3,7 @@
     <template #header
       ><span>
         <ArrowLeftIcon
-          @click="navigateTo('/student/mata-pelajaran')"
+          @click="router.go(-1)"
           class="w-5 text-gray-500 cursor-pointer"
         />
       </span>
@@ -153,6 +153,7 @@ const assignmentId = route.params.id as string;
 
 const { getAssignmentByIdForStudent, getSubmittedAssignmentForStudent } =
   useAssignment();
+const router = useRouter();
 
 const assignment = ref<any>({});
 const submittedAssignment = ref<any>();
@@ -189,5 +190,9 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "is-student",
+});
+
+useHead({
+  title: "Detail Tugas",
 });
 </script>

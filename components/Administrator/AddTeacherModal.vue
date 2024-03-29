@@ -20,10 +20,10 @@
         <div class="flex min-h-full items-center justify-center p-4">
           <HeadlessDialogPanel class="w-full max-w-5xl rounded bg-white p-5">
             <HeadlessDialogTitle class="border-b pb-3 font-medium text-lg"
-              >Tambahkan Siswa Baru</HeadlessDialogTitle
+              >Tambahkan Guru Baru</HeadlessDialogTitle
             >
 
-            <form @submit.prevent="addStudent" class="mt-3">
+            <form @submit.prevent="addTeacher" class="mt-3">
               <div class="mb-4">
                 <label
                   for="email"
@@ -33,7 +33,7 @@
                 <input
                   type="email"
                   id="email"
-                  v-model="student.email"
+                  v-model="teacher.email"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
@@ -52,7 +52,7 @@
                 <input
                   type="text"
                   id="password"
-                  v-model="student.password"
+                  v-model="teacher.password"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
@@ -65,18 +65,18 @@
                 <input
                   type="text"
                   id="name"
-                  v-model="student.name"
+                  v-model="teacher.name"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
               <div class="mb-4">
-                <label for="nis" class="block text-sm font-medium text-gray-700"
-                  >No. Induk Siswa</label
+                <label for="nip" class="block text-sm font-medium text-gray-700"
+                  >No. Unik Pendidik dan Tenaga Kependidikan</label
                 >
                 <input
                   type="text"
-                  id="nis"
-                  v-model="student.nis"
+                  id="nip"
+                  v-model="teacher.nuptk"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
@@ -89,32 +89,11 @@
                 <input
                   type="text"
                   id="phone"
-                  v-model="student.phone"
+                  v-model="teacher.phone"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
-              <div class="mb-4">
-                <label
-                  for="kelas"
-                  class="block text-sm font-medium text-gray-700"
-                  >Kelas</label
-                >
-                <select
-                  id="kelas"
-                  v-model="student.kelas"
-                  class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                >
-                  <option value="">Pilih Kelas</option>
-                  <option
-                    v-for="(kelas, kelasIndex) in listKelas"
-                    :key="kelasIndex"
-                    :value="kelas.name"
-                  >
-                    {{ kelas.name }}
-                  </option>
-                  <!-- Add more options as needed -->
-                </select>
-              </div>
+
               <div class="mb-4">
                 <label
                   for="foto"
@@ -131,17 +110,16 @@
               </div>
 
               <div class="mb-4">
-                <Spinner v-if="isUploadProfilePicture" />
+                <UISpinner v-if="isUploadProfilePicture" />
                 <NuxtImg
-                  v-else-if="student.profileUrl && !isUploadProfilePicture"
-                  :src="student.profileUrl"
+                  v-else-if="teacher.profileUrl && !isUploadProfilePicture"
+                  :src="teacher.profileUrl"
                   width="300"
                   layout="fixed"
                   class="rounded shadow-sm"
                 />
               </div>
-
-              <Spinner v-if="addStudentStatus.isLoading" class="mt-3" />
+              <UISpinner v-if="addTeacherStatus.isLoading" class="mt-3" />
               <div v-else class="flex justify-end gap-3 mt-5 border-t pt-3">
                 <button
                   @click="closeModal"
@@ -154,7 +132,7 @@
                   type="submit"
                   class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:cursor-not-allowed"
                 >
-                  Add Siswa
+                  Add Guru
                 </button>
               </div>
             </form>
@@ -168,31 +146,27 @@
 <script lang="ts" setup>
 const props = defineProps({
   isOpen: Boolean,
-  fetchStudentsData: {
+  fetchTeachersData: {
     type: Function as PropType<() => Promise<void>>,
     required: true,
   },
 });
 
-const { getListKelas } = useKelas();
+const teacher = ref({
+  email: "",
+  name: "",
+  password: "",
+  nuptk: "",
+  phone: "",
+  profileUrl: null as string | null,
+});
 
-const addStudentStatus = ref({
+const addTeacherStatus = ref({
   isLoading: false,
   isError: false,
   isSuccess: false,
 });
 
-const student = ref({
-  email: "",
-  name: "",
-  password: "",
-  nis: "",
-  phone: "",
-  kelas: "",
-  profileUrl: null as string | null,
-});
-
-const listKelas = ref<any>([]);
 const isUploadProfilePicture = ref(false);
 
 const closeModal = () => {
@@ -203,7 +177,7 @@ const emit = defineEmits(["close"]);
 
 const generateRandomPassword = () => {
   const randomPassword = Math.random().toString(36).slice(-8);
-  student.value.password = randomPassword;
+  teacher.value.password = randomPassword;
 };
 
 const uploadProfilePicture = async (event: Event) => {
@@ -227,57 +201,49 @@ const uploadProfilePicture = async (event: Event) => {
 
   if (respone.value) {
     //@ts-expect-error
-    student.value.profileUrl = respone.value.data?.url;
+    teacher.value.profileUrl = respone.value.data?.url;
   }
 
   isUploadProfilePicture.value = false;
 };
 
-const addStudent = async () => {
-  addStudentStatus.value.isLoading = true;
+const addTeacher = async () => {
+  addTeacherStatus.value.isLoading = true;
   if (
-    !student.value.email ||
-    !student.value.password ||
-    !student.value.name ||
-    !student.value.nis ||
-    !student.value.phone ||
-    !student.value.kelas ||
-    !student.value.profileUrl
+    !teacher.value.email ||
+    !teacher.value.password ||
+    !teacher.value.name ||
+    !teacher.value.nuptk ||
+    !teacher.value.phone ||
+    !teacher.value.profileUrl
   ) {
     alert("Tolong isi semua field!");
     return;
   }
 
-  const { error } = await useFetch("/api/administrator/student", {
+  const { error } = await useFetch("/api/administrator/teacher", {
     method: "POST",
     headers: {
       Authorization: "Bearer " + useCookie("auth:token").value,
     },
     body: {
-      email: student.value.email,
-      password: student.value.password,
-      name: student.value.name,
-      nis: student.value.nis,
-      phone: student.value.phone,
-      kelas: student.value.kelas,
-      profile_url: student.value.profileUrl,
+      email: teacher.value.email,
+      name: teacher.value.name,
+      nuptk: teacher.value.nuptk,
+      phone: teacher.value.phone,
+      profile_url: teacher.value.profileUrl,
+      password: teacher.value.password,
     },
   });
 
   if (error.value) {
     alert(error.value.message);
+    return;
   }
 
-  await props.fetchStudentsData();
-  addStudentStatus.value.isLoading = false;
+  alert("Guru berhasil ditambahkan!");
+  addTeacherStatus.value.isLoading = false;
+  await props.fetchTeachersData();
   closeModal();
 };
-
-onMounted(async () => {
-  listKelas.value = await getListKelas({
-    take: undefined,
-    skip: 0,
-    search: "",
-  });
-});
 </script>

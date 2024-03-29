@@ -22,6 +22,7 @@ export const getMaterials = async ({
         {
           title: {
             contains: search,
+            mode: "insensitive",
           },
         },
       ],
@@ -32,6 +33,13 @@ export const getMaterials = async ({
     where,
     take: take,
     skip: skip,
+    include: {
+      Teacher: true,
+      Class: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 };
 

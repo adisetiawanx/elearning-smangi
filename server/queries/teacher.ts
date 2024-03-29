@@ -24,21 +24,25 @@ export const getTeachers = async ({
         {
           email: {
             contains: search,
+            mode: "insensitive",
           },
         },
         {
           name: {
             contains: search,
+            mode: "insensitive",
           },
         },
         {
           nuptk: {
             contains: search,
+            mode: "insensitive",
           },
         },
         {
           phone: {
             contains: search,
+            mode: "insensitive",
           },
         },
       ],
@@ -56,6 +60,9 @@ export const getTeachers = async ({
       nuptk: true,
       phone: true,
       profile_image: true,
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 };

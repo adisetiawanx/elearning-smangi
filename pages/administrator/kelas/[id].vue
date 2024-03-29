@@ -31,7 +31,7 @@
         </div>
 
         <div class="flex justify-end gap-3 mt-5 border-t pt-3">
-          <Spinner v-if="updateClassStatus.isLoading" />
+          <UISpinner v-if="updateClassStatus.isLoading" />
           <button
             v-else
             type="submit"
@@ -133,5 +133,9 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "is-administrator",
+});
+
+useHead({
+  title: "Edit Kelas",
 });
 </script>

@@ -3,7 +3,7 @@
     <template #header
       ><span>
         <ArrowLeftIcon
-          @click="navigateTo('/teacher/kelas')"
+          @click="router.go(-1)"
           class="w-5 text-gray-500 cursor-pointer"
         />
       </span>
@@ -40,7 +40,7 @@
           <label for="files" class="block text-sm font-medium text-gray-700"
             >Files</label
           >
-          <Spinner v-if="isUploadFiles" class="mt-1" />
+          <UISpinner v-if="isUploadFiles" class="mt-1" />
           <input
             v-else
             @change="uploadFiles"
@@ -79,7 +79,7 @@
           </div>
         </div>
         <div class="flex justify-end gap-3 mt-5 border-t pt-3">
-          <Spinner v-if="updateMaterialStatus.isLoading" />
+          <UISpinner v-if="updateMaterialStatus.isLoading" />
           <button
             v-else
             :disabled="isUploadFiles"
@@ -101,6 +101,7 @@ import {
   TrashIcon,
 } from "@heroicons/vue/24/outline";
 
+const router = useRouter();
 const route = useRoute();
 const materialId = route.params.id;
 
@@ -196,5 +197,9 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "is-teacher",
+});
+
+useHead({
+  title: "Detail Materi",
 });
 </script>

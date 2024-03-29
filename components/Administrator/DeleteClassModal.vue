@@ -20,13 +20,13 @@
         <div class="flex min-h-full items-center justify-center p-4">
           <HeadlessDialogPanel class="w-full max-w-xl rounded bg-white p-5">
             <HeadlessDialogTitle class="border-b pb-3 font-medium text-lg"
-              >Hapus siswa</HeadlessDialogTitle
+              >Hapus kelas</HeadlessDialogTitle
             >
 
             <p class="text-lg mt-3">
-              Apakah anda yakin ingin menghapus siswa ini?
+              Apakah anda yakin ingin menghapus kelas ini?
             </p>
-            <Spinner v-if="deleteStudentStatus.isLoading" class="mt-3" />
+            <UISpinner v-if="deleteClassStatus.isLoading" class="mt-3" />
             <div v-else class="space-x-3 mt-3 flex justify-end">
               <button
                 @click="closeModal"
@@ -35,7 +35,7 @@
                 Batal
               </button>
               <button
-                @click="handleDeleteStudent"
+                @click="handleDeleteClass"
                 class="inline-flex items-center font-medium bg-red-500 text-white gap-1.5 py-1.5 px-4 rounded-md hover:bg-red-600"
               >
                 Hapus
@@ -55,25 +55,25 @@ const props = defineProps({
     required: true,
   },
   isOpen: Boolean,
-  fetchDataStudent: {
+  fetchDataClass: {
     type: Function as PropType<() => Promise<void>>,
     required: true,
   },
 });
 
-const deleteStudentStatus = ref({
+const deleteClassStatus = ref({
   isLoading: false,
   isError: false,
   isSuccess: false,
 });
 
-const { deleteStudent } = useStudent();
+const { deleteKelas } = useKelas();
 
-const handleDeleteStudent = async () => {
-  deleteStudentStatus.value.isLoading = true;
-  await deleteStudent(props.id);
-  await props.fetchDataStudent();
-  deleteStudentStatus.value.isLoading = false;
+const handleDeleteClass = async () => {
+  deleteClassStatus.value.isLoading = true;
+  await deleteKelas(props.id);
+  await props.fetchDataClass();
+  deleteClassStatus.value.isLoading = false;
   closeModal();
 };
 

@@ -17,6 +17,7 @@ export const getSubject = async ({
         {
           name: {
             contains: search,
+            mode: "insensitive",
           },
         },
       ],
@@ -42,6 +43,9 @@ export const getSubject = async ({
           name: true,
         },
       },
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 };
@@ -158,7 +162,8 @@ export const getSubjectForTeacher = async ({
         {
           Class: {
             name: {
-              contains: search?.toLocaleUpperCase(),
+              contains: search,
+              mode: "insensitive",
             },
           },
         },
@@ -179,6 +184,9 @@ export const getSubjectForTeacher = async ({
           name: true,
         },
       },
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 };
@@ -239,6 +247,7 @@ export const getSubjectForStudent = async ({
         {
           name: {
             contains: search,
+            mode: "insensitive",
           },
         },
       ],
@@ -261,6 +270,9 @@ export const getSubjectForStudent = async ({
           name: true,
         },
       },
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 };

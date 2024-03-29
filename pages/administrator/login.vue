@@ -101,4 +101,8 @@ const loginHandler = async () => {
 definePageMeta({
   middleware: "is-administrator-login",
 });
+
+useHead({
+  title: "Login Administrator",
+});
 </script>

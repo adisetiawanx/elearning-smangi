@@ -3,7 +3,7 @@
     <template #header
       ><span>
         <ArrowLeftIcon
-          @click="navigateTo('/teacher/kelas')"
+          @click="router.go(-1)"
           class="w-5 text-gray-500 cursor-pointer"
         />
       </span>
@@ -33,7 +33,7 @@
             type="text"
             id="description"
             v-model="assignment.content"
-            class="min-h-[400px] mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+            class="min-h-[250px] mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
           />
         </div>
 
@@ -53,7 +53,7 @@
           <label for="files" class="block text-sm font-medium text-gray-700"
             >Files</label
           >
-          <Spinner v-if="isUploadFiles" class="mt-1" />
+          <UISpinner v-if="isUploadFiles" class="mt-1" />
           <input
             v-else
             @change="uploadFiles"
@@ -91,8 +91,9 @@
             </div>
           </div>
         </div>
+
         <div class="flex justify-end gap-3 mt-5 border-t pt-3">
-          <Spinner v-if="updateAssignmentStatus.isLoading" />
+          <UISpinner v-if="updateAssignmentStatus.isLoading" />
           <button
             v-else
             :disabled="isUploadFiles"
@@ -103,6 +104,66 @@
           </button>
         </div>
       </form>
+      <!-- Submitted Assignment -->
+      <div class="mx-5 my-5 border-t pt-2">
+        <div class="my-2">
+          <h3 class="font-medium">List tugas yang dikumpulkan siswa</h3>
+        </div>
+        <p
+          v-if="
+            assignment.StudentAssigment &&
+            assignment.StudentAssigment?.length <= 0
+          "
+          class="text-sm text-gray-500"
+        >
+          Tidak ada tugas...
+        </p>
+        <ul v-else role="list" class="border-x max-h-96 overflow-y-auto">
+          <li
+            v-for="(
+              submmitedAssignment, submmitedAssignmentIndex
+            ) in assignment.StudentAssigment"
+            :key="assignment.id"
+            :class="[
+              submmitedAssignmentIndex + 1 ==
+              assignment.StudentAssigment?.length
+                ? 'border-b'
+                : '',
+              'border-t',
+            ]"
+          >
+            <div
+              class="group flex items-center justify-between px-4 py-3 hover:bg-gray-50 sm:px-6 text-sm"
+            >
+              <span class="flex-1 truncate font-medium">
+                {{ submmitedAssignment.Student.name }}
+              </span>
+              <span class="flex-1 truncate text-gray-500">
+                {{ submmitedAssignment.grade || "Belum dinilai" }}
+              </span>
+              <span class="flex-initial truncate text-gray-500 italic">
+                {{
+                  new Date(submmitedAssignment.createdAt).toLocaleString(
+                    "id-ID",
+                    {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    }
+                  )
+                }}
+              </span>
+              <div class="flex-1 flex justify-end gap-2">
+                <NuxtLink :to="`/teacher/submitted/${submmitedAssignment.id}`">
+                  <PencilIcon
+                    class="w-6 bg-primary p-0.5 rounded shadow text-white cursor-pointer"
+                  />
+                </NuxtLink>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
     </template>
   </NuxtLayout>
 </template>
@@ -112,8 +173,10 @@ import {
   ArrowLeftIcon,
   DocumentTextIcon,
   TrashIcon,
+  PencilIcon,
 } from "@heroicons/vue/24/outline";
 
+const router = useRouter();
 const route = useRoute();
 const assignmentId = route.params.id;
 
@@ -216,5 +279,9 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "is-teacher",
+});
+
+useHead({
+  title: "Detail Tugas",
 });
 </script>

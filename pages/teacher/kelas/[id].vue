@@ -3,7 +3,7 @@
     <template #header
       ><span>
         <ArrowLeftIcon
-          @click="navigateTo('/teacher/kelas')"
+          @click="router.go(-1)"
           class="w-5 text-gray-500 cursor-pointer"
         />
       </span>
@@ -181,6 +181,8 @@ import {
 } from "@heroicons/vue/24/outline";
 const { getSubjectByIdForTeacher } = useSubject();
 
+const router = useRouter();
+
 const isOpenAddMaterialModal = ref(false);
 const isOpenDeleteMaterialModal = ref(false);
 const isOpenAddAssignmentlModal = ref(false);
@@ -208,5 +210,9 @@ definePageMeta({
 
 onMounted(async () => {
   await fetchSubjectData();
+});
+
+useHead({
+  title: "Detail Mata Pelajaran",
 });
 </script>

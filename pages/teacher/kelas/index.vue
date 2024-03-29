@@ -47,7 +47,7 @@
           </div>
         </li>
       </ul>
-      <Spinner v-else-if="fetchSubjectDataStatus.isLoading" />
+      <UISpinner v-else-if="fetchSubjectDataStatus.isLoading" />
       <p v-else class="mx-7 text-gray-500 text-sm">
         Tidak ada kelas & mata pelajaran yang tersedia.
       </p>
@@ -141,5 +141,9 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "is-teacher",
+});
+
+useHead({
+  title: "Kelas & Mata Pelajaran",
 });
 </script>

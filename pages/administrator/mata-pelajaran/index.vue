@@ -2,7 +2,7 @@
   <NuxtLayout name="administrator-dashboard">
     <template #header>List Mata Pelajaran</template>
     <template #content>
-      <AddSubjectModal
+      <AdministratorAddSubjectModal
         v-if="isOpen"
         :fetch-data-subjects="fetchSubjectList"
         :is-open="isOpen"
@@ -39,7 +39,7 @@
             'border-t',
           ]"
         >
-          <DeleteSubjectModal
+          <AdministratorDeleteSubjectModal
             :id="subject.id"
             :is-open="isOpenDeleteModal"
             :fetch-data-subject="fetchSubjectList"
@@ -75,7 +75,7 @@
           </div>
         </li>
       </ul>
-      <Spinner v-else-if="fetchSubjectDataStatus.isLoading" />
+      <UISpinner v-else-if="fetchSubjectDataStatus.isLoading" />
       <p v-else class="mx-7 text-gray-500 text-sm">
         Tidak ada mata pelajaran yang tersedia.
       </p>
@@ -178,5 +178,9 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "is-administrator",
+});
+
+useHead({
+  title: "Mata Pelajaran",
 });
 </script>

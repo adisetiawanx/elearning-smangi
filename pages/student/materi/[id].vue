@@ -3,7 +3,7 @@
     <template #header
       ><span>
         <ArrowLeftIcon
-          @click="navigateTo('/student/mata-pelajaran')"
+          @click="router.go(-1)"
           class="w-5 text-gray-500 cursor-pointer"
         />
       </span>
@@ -54,6 +54,7 @@
 import { ArrowLeftIcon, DocumentTextIcon } from "@heroicons/vue/24/outline";
 
 const route = useRoute();
+const router = useRouter();
 const materialId = route.params.id;
 
 const { getMaterialByIdForStudent } = useMaterial();
@@ -74,5 +75,9 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "is-student",
+});
+
+useHead({
+  title: "Detail Materi",
 });
 </script>

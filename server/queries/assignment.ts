@@ -22,16 +22,24 @@ export const getAssignments = async ({
         {
           title: {
             contains: search,
+            mode: "insensitive",
           },
         },
       ],
     };
   }
 
-  return await Prisma.material.findMany({
+  return await Prisma.assignment.findMany({
     where,
     take: take,
     skip: skip,
+    include: {
+      Teacher: true,
+      Class: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 };
 
@@ -99,6 +107,22 @@ export const getAssignmentById = async (id: string) => {
     },
     include: {
       MediaFile: true,
+      StudentAssigment: {
+        where: {
+          assigment_id: id,
+        },
+        include: {
+          Student: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
     },
   });
 };

@@ -3,7 +3,7 @@
     <template #header>
       <span>
         <ArrowLeftIcon
-          @click="navigateTo('/teacher')"
+          @click="router.go(-1)"
           class="w-5 text-gray-500 cursor-pointer"
         />
       </span>
@@ -90,7 +90,7 @@
           />
         </div>
         <div class="mb-4">
-          <Spinner v-if="isUploadProfilePicture" />
+          <UISpinner v-if="isUploadProfilePicture" />
           <NuxtImg
             v-else-if="teacherData.profile_image && !isUploadProfilePicture"
             :src="teacherData.profile_image"
@@ -100,7 +100,7 @@
           />
         </div>
         <div class="flex justify-end gap-3 mt-5 border-t pt-3">
-          <Spinner v-if="updateTeacherStatus.isLoading" />
+          <UISpinner v-if="updateTeacherStatus.isLoading" />
           <button
             v-else
             :disabled="isUploadProfilePicture"
@@ -120,6 +120,7 @@ import { ArrowLeftIcon } from "@heroicons/vue/24/outline";
 
 const { getTeacher } = useTeacher();
 const { signOut } = useAuth();
+const router = useRouter();
 
 const teacherData = ref<any>({});
 const updateTeacherStatus = ref({
@@ -206,5 +207,9 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "is-teacher",
+});
+
+useHead({
+  title: "Setting",
 });
 </script>

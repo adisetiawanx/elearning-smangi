@@ -6,6 +6,8 @@
         <label for="search" class="sr-only">Search</label>
         <div class="rounded shadow-sm">
           <input
+            @input="searchMaterialData"
+            v-model="queryMaterial.search"
             type="text"
             name="search"
             id="search"
@@ -28,21 +30,18 @@
             class="group flex items-center justify-between px-4 py-3 hover:bg-gray-50 sm:px-6 text-sm"
           >
             <span class="flex-1 truncate font-medium">
-              {{ material.name }}
+              {{ material.title }}
             </span>
-            <div class="flex-1 flex justify-end">
-              <NuxtLink
-                :to="`/administrator/materi/${material.id}`"
-                class="flex-1 flex justify-end"
-              >
-                <Cog8ToothIcon
-                  class="w-6 bg-primary p-0.5 rounded shadow text-white cursor-pointer"
-                />
-              </NuxtLink>
-            </div>
+            <span class="flex-1 truncate text-center">
+              {{ material.Teacher.name }}
+            </span>
+            <span class="flex-1 truncate text-right">
+              {{ material.Class.name }}
+            </span>
           </div>
         </li>
       </ul>
+      <UISpinner v-else-if="fetchMaterialDataStatus.isLoading" />
       <p v-else class="mx-7 text-gray-500 text-sm">
         Tidak ada materi yang tersedia.
       </p>
@@ -85,11 +84,9 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  Cog8ToothIcon,
-  ArrowLeftIcon,
-  ArrowRightIcon,
-} from "@heroicons/vue/24/outline";
+// @ts-ignore
+import { debounce } from "lodash";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/vue/24/outline";
 
 const { getListMaterial } = useMaterial();
 
@@ -98,24 +95,45 @@ const page = route.query.page ? Number(route.query.page) : 1;
 
 const materialArr = ref<any>([]);
 
+const fetchMaterialDataStatus = ref({
+  isLoading: false,
+  isError: false,
+  isSuccess: false,
+});
+
 const queryMaterial = ref({
   take: 20,
   skip: (page - 1) * 20,
+  search: "",
 });
+
+const searchMaterialData = debounce(async () => {
+  fetchMaterialDataStatus.value.isLoading = true;
+  queryMaterial.value.skip = 0;
+  await fetchMaterialList();
+  fetchMaterialDataStatus.value.isLoading = false;
+}, 500);
 
 const fetchMaterialList = async () => {
   const materials = await getListMaterial({
     take: queryMaterial.value.take,
     skip: queryMaterial.value.skip,
+    search: queryMaterial.value.search,
   });
   materialArr.value = materials;
 };
 
 onMounted(async () => {
+  fetchMaterialDataStatus.value.isLoading = true;
   await fetchMaterialList();
+  fetchMaterialDataStatus.value.isLoading = false;
 });
 
 definePageMeta({
   middleware: "is-administrator",
+});
+
+useHead({
+  title: "Materi",
 });
 </script>

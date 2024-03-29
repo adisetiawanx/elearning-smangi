@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="teacher-dashboard">
+  <NuxtLayout name="student-dashboard">
     <template #header>List Mata Pelajaran</template>
     <template #content>
       <div class="mb-3 mt-3 mx-7">
@@ -47,7 +47,7 @@
           </div>
         </li>
       </ul>
-      <Spinner v-else-if="fetchSubjectDataStatus.isLoading" />
+      <UISpinner v-else-if="fetchSubjectDataStatus.isLoading" />
       <p v-else class="mx-7 text-gray-500 text-sm">
         Tidak ada kelas & mata pelajaran yang tersedia.
       </p>
@@ -141,5 +141,9 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "is-student",
+});
+
+useHead({
+  title: "Mata Pelajaran",
 });
 </script>

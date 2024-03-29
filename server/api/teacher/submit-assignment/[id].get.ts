@@ -1,18 +1,19 @@
-import { getMaterials } from "~/server/queries/material";
+import { getSubmmitedAssignmentById } from "~/server/queries/studentAssingment";
 
 export default defineEventHandler(async (event) => {
   try {
-    const query = getQuery(event);
+    await isTeacherServer(event);
 
-    const materials = await getMaterials({
-      take: Number(query.take) || undefined,
-      skip: Number(query.skip) || undefined,
-      search: String(query.search) || undefined,
-    });
+    const params = getRouterParams(event);
+    const submittedAssignmentId = params.id;
+
+    const submittedAssignmentDB = await getSubmmitedAssignmentById(
+      submittedAssignmentId
+    );
 
     return {
-      msg: "Materials fetched successfully",
-      data: materials,
+      msg: "Submitted Assignment fetched successfully",
+      data: submittedAssignmentDB,
     };
   } catch (error) {
     if (error instanceof ErrorWithCode) {

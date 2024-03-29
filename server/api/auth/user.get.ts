@@ -1,6 +1,5 @@
 import { H3Event } from "h3";
 import { verify } from "jsonwebtoken";
-import { ACCESS_TOKEN_SECRET } from "../../../configs/env";
 
 const TOKEN_TYPE = "Bearer";
 
@@ -21,7 +20,7 @@ const ensureAuth = (event: H3Event) => {
 
   const extractedToken = extractToken(authHeaderValue);
   try {
-    return verify(extractedToken, ACCESS_TOKEN_SECRET);
+    return verify(extractedToken, process.env.ACCESS_TOKEN_SECRET as string);
   } catch (error) {
     throw createError({
       statusCode: 403,

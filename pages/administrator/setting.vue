@@ -3,7 +3,7 @@
     <template #header>
       <span>
         <ArrowLeftIcon
-          @click="navigateTo('/administrator')"
+          @click="router.go(-1)"
           class="w-5 text-gray-500 cursor-pointer"
         />
       </span>
@@ -64,7 +64,7 @@
           />
         </div>
         <div class="mb-4">
-          <Spinner v-if="isUploadProfilePicture" />
+          <UISpinner v-if="isUploadProfilePicture" />
           <NuxtImg
             v-else-if="
               administratorData.profile_image && !isUploadProfilePicture
@@ -76,7 +76,7 @@
           />
         </div>
         <div class="flex justify-end gap-3 mt-5 border-t pt-3">
-          <Spinner v-if="updateAdministratorStatus.isLoading" />
+          <UISpinner v-if="updateAdministratorStatus.isLoading" />
           <button
             v-else
             :disabled="isUploadProfilePicture"
@@ -96,6 +96,8 @@ import { ArrowLeftIcon } from "@heroicons/vue/24/outline";
 
 const { getAdministrator } = useAdministrator();
 const { signOut } = useAuth();
+
+const router = useRouter();
 
 const administratorData = ref<any>({});
 const updateAdministratorStatus = ref({
@@ -182,5 +184,9 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "is-administrator",
+});
+
+useHead({
+  title: "Setting",
 });
 </script>

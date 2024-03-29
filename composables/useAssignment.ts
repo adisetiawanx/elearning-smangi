@@ -2,14 +2,14 @@ export default () => {
   const getListAssignment = async ({
     take,
     skip,
-    serach,
+    search,
   }: {
     take: number | undefined;
     skip: number | undefined;
-    serach: string | undefined;
+    search: string | undefined;
   }) => {
     const { data: respone, error } = await useFetch(
-      `/api/administrator/assignment?take=${take}&skip=${skip}&search=${serach}`,
+      `/api/administrator/assignment?take=${take}&skip=${skip}&search=${search}`,
       {
         headers: {
           Authorization: "Bearer " + useCookie("auth:token").value,
@@ -51,6 +51,26 @@ export default () => {
   const getAssignmentByIdForTeacher = async (id: any) => {
     const { data: respone, error } = await useFetch(
       `/api/teacher/assignment/${id}`,
+      {
+        headers: {
+          Authorization: "Bearer " + useCookie("auth:token").value,
+        },
+      }
+    );
+
+    if (error.value) {
+      alert(error.value.message);
+      return;
+    }
+
+    if (respone.value) {
+      return respone.value.data;
+    }
+  };
+
+  const getSubmittedAssignmentByIdForTeacher = async (id: any) => {
+    const { data: respone, error } = await useFetch(
+      `/api/teacher/submit-assignment/${id}`,
       {
         headers: {
           Authorization: "Bearer " + useCookie("auth:token").value,
@@ -133,6 +153,7 @@ export default () => {
     getListAssignment,
     deleteAssignment,
     getAssignmentByIdForTeacher,
+    getSubmittedAssignmentByIdForTeacher,
     getAssignmentByIdForStudent,
     getSubmittedAssignmentForStudent,
     deleteSubmittedAssignmentForStudent,

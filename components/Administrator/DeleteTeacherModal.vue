@@ -26,7 +26,7 @@
             <p class="text-lg mt-3">
               Apakah anda yakin ingin menghapus guru ini?
             </p>
-            <Spinner v-if="deleteTeacherStatus.isLoading" class="mt-3" />
+            <UISpinner v-if="deleteTeacherStatus.isLoading" class="mt-3" />
             <div v-else class="space-x-3 mt-3 flex justify-end">
               <button
                 @click="closeModal"

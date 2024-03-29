@@ -2,7 +2,7 @@
   <NuxtLayout name="administrator-dashboard">
     <template #header>List Guru</template>
     <template #content>
-      <AddTeacherModal
+      <AdministratorAddTeacherModal
         v-if="isOpen"
         :fetch-teachers-data="fetchTeachersData"
         :is-open="isOpen"
@@ -40,7 +40,7 @@
             'border-t',
           ]"
         >
-          <DeleteTeacherModal
+          <AdministratorDeleteTeacherModal
             :id="teacher.id"
             :is-open="isOpenDeleteModal"
             :fetch-data-teacher="fetchTeachersData"
@@ -73,7 +73,7 @@
           </div>
         </li>
       </ul>
-      <Spinner v-else-if="fetchTeacherDataStatus.isLoading" />
+      <UISpinner v-else-if="fetchTeacherDataStatus.isLoading" />
       <p v-else class="mx-7 text-gray-500 text-sm">
         Tidak ada guru yang tersedia.
       </p>
@@ -178,5 +178,8 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "is-administrator",
+});
+useHead({
+  title: "Guru",
 });
 </script>

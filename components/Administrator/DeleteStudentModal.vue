@@ -20,13 +20,13 @@
         <div class="flex min-h-full items-center justify-center p-4">
           <HeadlessDialogPanel class="w-full max-w-xl rounded bg-white p-5">
             <HeadlessDialogTitle class="border-b pb-3 font-medium text-lg"
-              >Hapus mata pelajaran</HeadlessDialogTitle
+              >Hapus siswa</HeadlessDialogTitle
             >
 
             <p class="text-lg mt-3">
-              Apakah anda yakin ingin menghapus mata pelajaran ini?
+              Apakah anda yakin ingin menghapus siswa ini?
             </p>
-            <Spinner v-if="deleteClassStatus.isLoading" class="mt-3" />
+            <UISpinner v-if="deleteStudentStatus.isLoading" class="mt-3" />
             <div v-else class="space-x-3 mt-3 flex justify-end">
               <button
                 @click="closeModal"
@@ -35,7 +35,7 @@
                 Batal
               </button>
               <button
-                @click="handleDeleteSubject"
+                @click="handleDeleteStudent"
                 class="inline-flex items-center font-medium bg-red-500 text-white gap-1.5 py-1.5 px-4 rounded-md hover:bg-red-600"
               >
                 Hapus
@@ -55,25 +55,25 @@ const props = defineProps({
     required: true,
   },
   isOpen: Boolean,
-  fetchDataSubject: {
+  fetchDataStudent: {
     type: Function as PropType<() => Promise<void>>,
     required: true,
   },
 });
 
-const deleteClassStatus = ref({
+const deleteStudentStatus = ref({
   isLoading: false,
   isError: false,
   isSuccess: false,
 });
 
-const { deleteSubject } = useSubject();
+const { deleteStudent } = useStudent();
 
-const handleDeleteSubject = async () => {
-  deleteClassStatus.value.isLoading = true;
-  await deleteSubject(props.id);
-  await props.fetchDataSubject();
-  deleteClassStatus.value.isLoading = false;
+const handleDeleteStudent = async () => {
+  deleteStudentStatus.value.isLoading = true;
+  await deleteStudent(props.id);
+  await props.fetchDataStudent();
+  deleteStudentStatus.value.isLoading = false;
   closeModal();
 };
 

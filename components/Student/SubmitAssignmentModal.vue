@@ -46,7 +46,7 @@
                   class="block text-sm font-medium text-gray-700"
                   >Files</label
                 >
-                <Spinner v-if="isUploadFiles" class="mt-1" />
+                <UISpinner v-if="isUploadFiles" class="mt-1" />
                 <input
                   v-else
                   @change="uploadFiles"
@@ -95,7 +95,7 @@
 
                 <div v-else class="mt-2">
                   <vue-camera ref="camera" />
-                  <Spinner v-if="isUploadProofImage" class="mt-3" />
+                  <UISpinner v-if="isUploadProofImage" class="mt-3" />
                   <button
                     v-else
                     class="mt-3 inline-flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded shadow text-white bg-primary hover:bg-secondary disabled:cursor-not-allowed"

@@ -1,3 +1,4 @@
+import { assign } from "lodash";
 import Prisma from "../../configs/db";
 
 type File = {
@@ -64,6 +65,34 @@ export const deleteSubmmitedAssignment = async (id: string) => {
   return Prisma.studentAssigment.delete({
     where: {
       id,
+    },
+  });
+};
+
+export const getSubmmitedAssignmentById = async (id: string) => {
+  return await Prisma.studentAssigment.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      MediaFile: true,
+    },
+  });
+};
+
+export const updateSubmmitedAssignmentForTeacher = (
+  assignmentId: string,
+  grade: number
+) => {
+  return Prisma.studentAssigment.update({
+    where: {
+      id: assignmentId,
+    },
+    data: {
+      grade,
+    },
+    include: {
+      MediaFile: true,
     },
   });
 };

@@ -3,7 +3,7 @@
     <template #header
       ><span>
         <ArrowLeftIcon
-          @click="navigateTo('/administrator/guru')"
+          @click="router.go(-1)"
           class="w-5 text-gray-500 cursor-pointer"
         />
       </span>
@@ -84,7 +84,7 @@
           />
         </div>
         <div class="mb-4">
-          <Spinner v-if="isUploadProfilePicture" />
+          <UISpinner v-if="isUploadProfilePicture" />
           <NuxtImg
             v-else-if="teacherData.profile_image && !isUploadProfilePicture"
             :src="teacherData.profile_image"
@@ -144,6 +144,8 @@
 <script lang="ts" setup>
 import { ArrowLeftIcon } from "@heroicons/vue/24/outline";
 
+const router = useRouter();
+
 const teacherData = ref<any>({});
 const updateTeacherStatus = ref({
   isLoading: false,
@@ -190,7 +192,6 @@ const uploadProfilePicture = async (event: Event) => {
 
 const updateTeacher = async () => {
   updateTeacherStatus.value.isLoading = true;
-  console.log(teacherData.value);
   if (
     !teacherData.value.email ||
     !teacherData.value.password ||
@@ -239,5 +240,9 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "is-administrator",
+});
+
+useHead({
+  title: "Edit Guru",
 });
 </script>

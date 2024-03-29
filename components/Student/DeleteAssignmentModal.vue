@@ -27,7 +27,7 @@
               Apakah anda yakin ingin menghapus tugas yang telah dikumpulkan
               ini?
             </p>
-            <Spinner v-if="deleteClassStatus.isLoading" class="mt-3" />
+            <UISpinner v-if="deleteClassStatus.isLoading" class="mt-3" />
             <div v-else class="space-x-3 mt-3 flex justify-end">
               <button
                 @click="closeModal"
