@@ -264,12 +264,14 @@ const addStudent = async () => {
     },
   });
 
+  addStudentStatus.value.isLoading = false;
+
   if (error.value) {
     alert(error.value.message);
   }
 
   await props.fetchStudentsData();
-  addStudentStatus.value.isLoading = false;
+
   closeModal();
 };
 
