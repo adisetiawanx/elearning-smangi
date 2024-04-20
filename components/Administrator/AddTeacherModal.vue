@@ -111,11 +111,10 @@
 
               <div class="mb-4">
                 <UISpinner v-if="isUploadProfilePicture" />
-                <NuxtImg
+                <img
                   v-else-if="teacher.profileUrl && !isUploadProfilePicture"
                   :src="teacher.profileUrl"
                   width="300"
-                  layout="fixed"
                   class="rounded shadow-sm"
                 />
               </div>

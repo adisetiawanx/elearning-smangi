@@ -65,13 +65,12 @@
         </div>
         <div class="mb-4">
           <UISpinner v-if="isUploadProfilePicture" />
-          <NuxtImg
+          <img
             v-else-if="
               administratorData.profile_image && !isUploadProfilePicture
             "
             :src="administratorData.profile_image"
             width="300"
-            layout="fixed"
             class="rounded shadow-sm"
           />
         </div>

@@ -104,11 +104,10 @@
         </div>
         <div class="mb-4">
           <UISpinner v-if="isUploadProfilePicture" />
-          <NuxtImg
+          <img
             v-else-if="studentData.profile_image && !isUploadProfilePicture"
             :src="studentData.profile_image"
             width="300"
-            layout="fixed"
             class="rounded shadow-sm"
           />
         </div>

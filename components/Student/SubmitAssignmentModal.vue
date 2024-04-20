@@ -78,10 +78,9 @@
                   >Foto wajah untuk bukti</label
                 >
                 <div v-if="submitAssignment.proof_image">
-                  <NuxtImg
+                  <img
                     :src="submitAssignment.proof_image"
                     width="full"
-                    layout="fixed"
                     class="rounded shadow-sm"
                   />
 

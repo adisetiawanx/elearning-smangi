@@ -6,7 +6,6 @@ export default defineNuxtConfig({
     "@sidebase/nuxt-auth",
     "idamara-ui",
     "nuxt-headlessui",
-    "@nuxt/image",
   ],
   image: {
     cloudinary: {

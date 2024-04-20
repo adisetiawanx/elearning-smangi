@@ -20,10 +20,9 @@
         </div>
         <div v-if="assignment.proof_image" class="mb-5">
           <p class="font-medium text-gray-700">Bukti foto diri</p>
-          <NuxtImg
+          <img
             :src="assignment.proof_image"
             width="700"
-            layout="fixed"
             class="rounded shadow-sm mt-1"
           />
         </div>
